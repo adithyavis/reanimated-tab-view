@@ -1,22 +1,45 @@
-import React from 'react';
-import type { ViewStyle } from 'react-native';
-import type { StyleProp } from 'react-native';
-import { View } from 'react-native';
+import React, { useCallback } from 'react';
+import { Pressable, type ViewStyle, type StyleProp } from 'react-native';
+import Animated from 'react-native-reanimated';
 import { useHandleTabLayout } from '../hooks/useTabLayout';
+import type { Route, Scene } from '../types';
+import { useInternalContext } from '../providers/Internal';
+
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 type TabProps = {
   index: number;
-  noOfRoutes: number;
+  route: Route;
   style?: StyleProp<ViewStyle>;
+  onTabPress?: (scene: Scene) => void;
+  onTabLongPress?: (scene: Scene) => void;
 };
 const Tab: React.FC<TabProps> = React.memo(
-  ({ index, noOfRoutes, style, children }) => {
-    const { handleTabLayout } = useHandleTabLayout(index, noOfRoutes);
+  ({ index, route, style, children, onTabPress, onTabLongPress }) => {
+    const { jumpTo } = useInternalContext();
+
+    const { handleTabLayout } = useHandleTabLayout(index);
+
+    const handlePressTabItem = useCallback(() => {
+      const scene = { route };
+      onTabPress?.(scene);
+      jumpTo(route.key);
+    }, [jumpTo, onTabPress, route]);
+    const handleLongPressTabItem = useCallback(() => {
+      const scene = { route };
+      onTabLongPress?.(scene);
+      jumpTo(route.key);
+    }, [jumpTo, onTabLongPress, route]);
 
     return (
-      <View onLayout={handleTabLayout} style={style}>
+      <AnimatedPressable
+        onLayout={handleTabLayout}
+        onPress={handlePressTabItem}
+        onLongPress={handleLongPressTabItem}
+        style={style}
+      >
         {children}
-      </View>
+      </AnimatedPressable>
     );
   }
 );

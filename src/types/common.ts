@@ -27,7 +27,3 @@ export type SceneRendererProps = {
   animatedRouteIndex: SharedValue<number>;
   jumpTo: (key: string) => void;
 };
-
-export type TabBarType = 'primary' | 'secondary';
-
-export type RenderMode = 'all' | 'windowed' | 'lazy';

@@ -1,10 +1,12 @@
 import { useCallback } from 'react';
 import { useTabLayoutContext } from '../providers/TabLayout';
-import { runOnUI } from 'react-native-reanimated';
+import { runOnJS, runOnUI } from 'react-native-reanimated';
 import type { LayoutChangeEvent } from 'react-native';
+import { useInternalContext } from '../providers/Internal';
 
-export const useHandleTabLayout = (index: number, noOfRoutes: number) => {
-  const { routeIndexToTabWidthMap, routeIndexToTabOffsetMap } =
+export const useHandleTabLayout = (index: number) => {
+  const { noOfRoutes } = useInternalContext();
+  const { routeIndexToTabWidthMapSV, routeIndexToTabOffsetMapSV } =
     useTabLayoutContext();
 
   const handleTabLayout = useCallback(
@@ -13,20 +15,20 @@ export const useHandleTabLayout = (index: number, noOfRoutes: number) => {
         'worklet';
 
         const { width } = nativeEvent.layout;
-        const prevWidth = routeIndexToTabWidthMap.value[index] ?? 0;
+        const prevWidth = routeIndexToTabWidthMapSV.value[index] ?? 0;
         if (width !== prevWidth) {
-          routeIndexToTabWidthMap.value = {
-            ...routeIndexToTabWidthMap.value,
+          routeIndexToTabWidthMapSV.value = {
+            ...routeIndexToTabWidthMapSV.value,
             [index]: width,
           };
           let prevRouteIndexOffset = 0;
           for (let i = 0; i <= noOfRoutes; i += 1) {
             const prevRouteIndexWidth =
-              routeIndexToTabWidthMap.value[i - 1] ?? 0;
+              routeIndexToTabWidthMapSV.value[i - 1] ?? 0;
             const currentRouteIndexOffset =
               prevRouteIndexOffset + prevRouteIndexWidth;
-            routeIndexToTabOffsetMap.value = {
-              ...routeIndexToTabOffsetMap.value,
+            routeIndexToTabOffsetMapSV.value = {
+              ...routeIndexToTabOffsetMapSV.value,
               [i]: currentRouteIndexOffset,
             };
             prevRouteIndexOffset = currentRouteIndexOffset;
@@ -35,31 +37,45 @@ export const useHandleTabLayout = (index: number, noOfRoutes: number) => {
       }
       runOnUI(updateTabWidthAndOffset)();
     },
-    [routeIndexToTabWidthMap, index, noOfRoutes, routeIndexToTabOffsetMap]
+    [routeIndexToTabWidthMapSV, index, noOfRoutes, routeIndexToTabOffsetMapSV]
   );
   return { handleTabLayout };
 };
 
-export const useHandleTabBarItemLayout = (index: number) => {
-  const { routeIndexToTabBarItemWidthMap } = useTabLayoutContext();
+export const useHandleTabContentLayout = (index: number) => {
+  const {
+    setRouteIndexToTabContentWidthMap,
+    routeIndexToTabContentWidthMapSV,
+  } = useTabLayoutContext();
 
-  const handleTabBarItemLayout = useCallback(
+  const updateTabContentWidthMap = useCallback(
+    (width: number) => {
+      setRouteIndexToTabContentWidthMap((prev) => ({
+        ...prev,
+        [index]: width,
+      }));
+    },
+    [index, setRouteIndexToTabContentWidthMap]
+  );
+
+  const handleTabContentLayout = useCallback(
     ({ nativeEvent }: LayoutChangeEvent) => {
-      function updateTabBarItemWidthAndOffset() {
+      function updateTabContentWidthAndOffset() {
         'worklet';
 
         const { width } = nativeEvent.layout;
-        const prevWidth = routeIndexToTabBarItemWidthMap.value[index] ?? 0;
+        const prevWidth = routeIndexToTabContentWidthMapSV.value[index] ?? 0;
         if (width !== prevWidth) {
-          routeIndexToTabBarItemWidthMap.value = {
-            ...routeIndexToTabBarItemWidthMap.value,
+          routeIndexToTabContentWidthMapSV.value = {
+            ...routeIndexToTabContentWidthMapSV.value,
             [index]: width,
           };
+          runOnJS(updateTabContentWidthMap)(width);
         }
       }
-      runOnUI(updateTabBarItemWidthAndOffset)();
+      runOnUI(updateTabContentWidthAndOffset)();
     },
-    [index, routeIndexToTabBarItemWidthMap]
+    [index, routeIndexToTabContentWidthMapSV, updateTabContentWidthMap]
   );
-  return { handleTabBarItemLayout };
+  return { handleTabContentLayout };
 };

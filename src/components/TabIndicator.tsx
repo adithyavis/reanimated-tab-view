@@ -3,34 +3,41 @@ import { StyleSheet } from 'react-native';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 import type { TabIndicatorProps } from '../types/TabIndicator';
 import { useTabLayoutContext } from '../providers/TabLayout';
+import { useInternalContext } from '../providers/Internal';
+import { usePropsContext } from '../providers/Props';
 
 const TabIndicator = React.memo((props: TabIndicatorProps) => {
-  const { tabBarType, animatedRouteIndex, style } = props;
+  const { style } = props;
+
+  const { tabBarType, tabBarPosition } = usePropsContext();
+  const { animatedRouteIndex } = useInternalContext();
 
   const {
-    routeIndexToTabWidthMap,
-    routeIndexToTabOffsetMap,
-    routeIndexToTabBarItemWidthMap,
+    routeIndexToTabWidthMapSV,
+    routeIndexToTabOffsetMapSV,
+    routeIndexToTabContentWidthMapSV,
   } = useTabLayoutContext();
 
-  const animatedTabIndicatorStyle = useAnimatedStyle(() => {
+  const animatedTabIndicatorContainerStyle = useAnimatedStyle(() => {
     const animatedRouteIndexFloor = Math.floor(animatedRouteIndex.value);
     const animatedRouteIndexCeil = animatedRouteIndexFloor + 1;
 
     const translateXFloor =
       tabBarType === 'primary'
-        ? (routeIndexToTabOffsetMap.value[animatedRouteIndexFloor] ?? 0) +
-          (routeIndexToTabWidthMap.value[animatedRouteIndexFloor] ?? 0) / 2 -
-          (routeIndexToTabBarItemWidthMap.value[animatedRouteIndexFloor] ?? 0) /
+        ? (routeIndexToTabOffsetMapSV.value[animatedRouteIndexFloor] ?? 0) +
+          (routeIndexToTabWidthMapSV.value[animatedRouteIndexFloor] ?? 0) / 2 -
+          (routeIndexToTabContentWidthMapSV.value[animatedRouteIndexFloor] ??
+            0) /
             2
-        : routeIndexToTabOffsetMap.value[animatedRouteIndexFloor] ?? 0;
+        : routeIndexToTabOffsetMapSV.value[animatedRouteIndexFloor] ?? 0;
     const translateXCeil =
       tabBarType === 'primary'
-        ? (routeIndexToTabOffsetMap.value[animatedRouteIndexCeil] ?? 0) +
-          (routeIndexToTabWidthMap.value[animatedRouteIndexCeil] ?? 0) / 2 -
-          (routeIndexToTabBarItemWidthMap.value[animatedRouteIndexCeil] ?? 0) /
+        ? (routeIndexToTabOffsetMapSV.value[animatedRouteIndexCeil] ?? 0) +
+          (routeIndexToTabWidthMapSV.value[animatedRouteIndexCeil] ?? 0) / 2 -
+          (routeIndexToTabContentWidthMapSV.value[animatedRouteIndexCeil] ??
+            0) /
             2
-        : routeIndexToTabOffsetMap.value[animatedRouteIndexCeil] ?? 0;
+        : routeIndexToTabOffsetMapSV.value[animatedRouteIndexCeil] ?? 0;
     const translateX =
       translateXFloor *
         (1 - (animatedRouteIndex.value - animatedRouteIndexFloor)) +
@@ -39,12 +46,12 @@ const TabIndicator = React.memo((props: TabIndicatorProps) => {
 
     const widthFloor =
       tabBarType === 'primary'
-        ? routeIndexToTabBarItemWidthMap.value[animatedRouteIndexFloor] ?? 0
-        : routeIndexToTabWidthMap.value[animatedRouteIndexFloor] ?? 0;
+        ? routeIndexToTabContentWidthMapSV.value[animatedRouteIndexFloor] ?? 0
+        : routeIndexToTabWidthMapSV.value[animatedRouteIndexFloor] ?? 0;
     const widthCeil =
       tabBarType === 'primary'
-        ? routeIndexToTabBarItemWidthMap.value[animatedRouteIndexFloor] ?? 0
-        : routeIndexToTabWidthMap.value[animatedRouteIndexCeil] ?? 0;
+        ? routeIndexToTabContentWidthMapSV.value[animatedRouteIndexCeil] ?? 0
+        : routeIndexToTabWidthMapSV.value[animatedRouteIndexCeil] ?? 0;
     const width =
       widthFloor * (1 - (animatedRouteIndex.value - animatedRouteIndexFloor)) +
       widthCeil * (1 - (animatedRouteIndexCeil - animatedRouteIndex.value));
@@ -53,23 +60,39 @@ const TabIndicator = React.memo((props: TabIndicatorProps) => {
 
   return (
     <Animated.View
-      style={[
-        styles.tabIndicator,
-        styles.primaryTabIndicator,
-        style,
-        animatedTabIndicatorStyle,
-      ]}
-    />
+      style={[styles.tabIndicatorContainer, animatedTabIndicatorContainerStyle]}
+    >
+      <Animated.View
+        style={[
+          styles.tabIndicator,
+          tabBarType === 'primary' && styles.primaryTabIndicator,
+          tabBarPosition === 'top' && styles.topTabIndicator,
+          tabBarPosition === 'bottom' && styles.bottomTabIndicator,
+          style,
+        ]}
+      />
+    </Animated.View>
   );
 });
 export default TabIndicator;
 
 const styles = StyleSheet.create({
+  tabIndicatorContainer: {
+    position: 'absolute',
+    height: '100%',
+    justifyContent: 'center',
+  },
   tabIndicator: {
     position: 'absolute',
-    backgroundColor: 'yellow',
-    height: 2,
     bottom: 0,
+    height: 2,
+    width: '100%',
+  },
+  topTabIndicator: {
+    bottom: 0,
+  },
+  bottomTabIndicator: {
+    top: 0,
   },
   primaryTabIndicator: {
     borderTopRightRadius: 2,

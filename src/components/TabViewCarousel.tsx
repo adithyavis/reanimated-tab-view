@@ -1,51 +1,53 @@
-import React, {
-  forwardRef,
-  useCallback,
-  useImperativeHandle,
-  useMemo,
-  useState,
-} from 'react';
-import { View } from 'react-native';
-import type { TabViewCarouselProps } from '../types/TabViewCarousel';
+import React, { forwardRef, useCallback, useImperativeHandle } from 'react';
+import { View, StyleSheet, Keyboard } from 'react-native';
 import { GestureDetector } from 'react-native-gesture-handler';
-import Animated, { useSharedValue } from 'react-native-reanimated';
-import { StyleSheet } from 'react-native';
+import Animated from 'react-native-reanimated';
+import type { TabViewCarouselProps } from '../types/TabViewCarousel';
 import {
   useCarouselJumpToIndex,
   useCarouselSwipePanGesture,
   useCarouselSwipeTranslationAnimatedStyle,
 } from '../hooks/useCarouselSwipe';
-import { useCarouselRouteIndices } from '../hooks/useCarousel';
-import { Keyboard } from 'react-native';
 import { useCarouselLazyLoading } from '../hooks/useCarouselLazyLoading';
 import LazyLoader from './LazyLoader';
 import SceneWrapper from './SceneWrapper';
+import { usePropsContext } from '../providers/Props';
+import { useInternalContext } from '../providers/Internal';
+import { JumpContextProvider } from '../providers/Jump';
+import {
+  CarouselContextProvider,
+  useCarouselContext,
+} from '../providers/Carousel';
 
 export type CarouselImperativeHandle = {
   jumpToRoute: (route: string) => void;
 };
 
-const TabViewCarousel = React.memo(
-  forwardRef<CarouselImperativeHandle, TabViewCarouselProps>((props, ref) => {
+const TabViewCarouselWithoutProviders = React.memo(
+  forwardRef<CarouselImperativeHandle, TabViewCarouselProps>((_, ref) => {
+    //#region context
     const {
+      keyboardDismissMode,
       navigationState,
-      renderScene,
-      layout,
-      renderMode = 'windowed',
-      onIndexChange,
-      style,
       sceneContainerStyle,
-      swipeEnabled = true,
-      keyboardDismissMode = 'auto',
-      smoothJump = true,
-      animatedRouteIndex,
+      renderScene,
       onSwipeStart,
       onSwipeEnd,
-    } = props;
+    } = usePropsContext();
 
-    const dismissKeyboard = useCallback(() => {
-      Keyboard.dismiss();
-    }, []);
+    const {
+      tabViewLayout,
+      initialRouteIndex,
+      currentRouteIndex,
+      animatedRouteIndex,
+      setCurrentRouteIndex,
+    } = useInternalContext();
+
+    const { translationPerSceneContainer } = useCarouselContext();
+    //#endregion
+
+    //#region callbacks
+    const dismissKeyboard = Keyboard.dismiss;
 
     const handleSwipeStart = useCallback(() => {
       onSwipeStart?.();
@@ -58,75 +60,34 @@ const TabViewCarousel = React.memo(
       onSwipeEnd?.();
     }, [onSwipeEnd]);
 
-    const handleIndexChange = useCallback(
-      (index: number) => {
-        onIndexChange?.(index);
-        if (keyboardDismissMode === 'auto') {
-          dismissKeyboard();
-        }
-      },
-      [dismissKeyboard, keyboardDismissMode, onIndexChange]
-    );
-
-    const sceneContainerWidth = useMemo(() => layout.width, [layout.width]);
-    const noOfRoutes = useMemo(
-      () => navigationState.routes.length,
-      [navigationState.routes.length]
-    );
-
-    const [initialRouteIndex] = useState(navigationState.index);
-    const [currentRouteIndex, setCurrentRouteIndex] =
-      useState(initialRouteIndex);
-    const currentRouteIndexSharedValue = useSharedValue(initialRouteIndex);
-    const prevRouteIndexSharedValue = useSharedValue(initialRouteIndex);
-    const [prevRouteIndex, setPrevRouteIndex] = useState(initialRouteIndex);
-    const routeIndexToJumpToSharedValue = useSharedValue<number | null>(null);
     const updateCurrentRouteIndex = useCallback(
-      (indexToUpdate: number) => {
+      (updatedIndex: number) => {
         const prevCurrentRouteIndex = currentRouteIndex;
-        setCurrentRouteIndex(indexToUpdate);
-        if (indexToUpdate !== prevCurrentRouteIndex) {
-          handleIndexChange(indexToUpdate);
+        setCurrentRouteIndex(updatedIndex);
+        if (updatedIndex !== prevCurrentRouteIndex) {
+          if (keyboardDismissMode === 'auto') {
+            Keyboard.dismiss();
+          }
         }
       },
-      [currentRouteIndex, handleIndexChange]
+      [currentRouteIndex, setCurrentRouteIndex, keyboardDismissMode]
     );
+    //#endregion
 
-    const swipeTranslationX = useSharedValue(
-      -navigationState.index * layout.width
-    );
-    const prevRouteTranslationX = useSharedValue(0);
-
-    const [isJumping, setIsJumping] = useState(false);
-
-    const { smallestRouteIndexToRender, largestRouteIndexToRender } =
-      useCarouselRouteIndices(currentRouteIndex, noOfRoutes);
-
+    //#region hooks
     const { isLazyLoadingEnabled, handleSceneMount, computeShouldRenderRoute } =
-      useCarouselLazyLoading(
-        renderMode,
-        initialRouteIndex,
-        currentRouteIndexSharedValue,
-        smallestRouteIndexToRender,
-        largestRouteIndexToRender,
-        prevRouteIndex
-      );
+      useCarouselLazyLoading();
 
-    const jumpToRoute = useCarouselJumpToIndex(
-      navigationState.routes,
-      currentRouteIndexSharedValue,
-      swipeTranslationX,
-      sceneContainerWidth,
-      noOfRoutes,
+    const jumpToRoute = useCarouselJumpToIndex(updateCurrentRouteIndex);
+
+    const swipePanGesture = useCarouselSwipePanGesture(
       updateCurrentRouteIndex,
-      prevRouteTranslationX,
-      setPrevRouteIndex,
-      prevRouteIndexSharedValue,
-      routeIndexToJumpToSharedValue,
-      smoothJump,
-      setIsJumping,
-      animatedRouteIndex
+      handleSwipeStart,
+      handleSwipeEnd
     );
+
+    const swipeTranslationAnimatedStyle =
+      useCarouselSwipeTranslationAnimatedStyle();
 
     useImperativeHandle(
       ref,
@@ -135,31 +96,15 @@ const TabViewCarousel = React.memo(
       }),
       [jumpToRoute]
     );
+    //#endregion
 
-    const swipePanGesture = useCarouselSwipePanGesture(
-      currentRouteIndexSharedValue,
-      swipeTranslationX,
-      updateCurrentRouteIndex,
-      sceneContainerWidth,
-      noOfRoutes,
-      handleSwipeStart,
-      handleSwipeEnd,
-      swipeEnabled,
-      setPrevRouteIndex,
-      prevRouteIndexSharedValue,
-      isJumping,
-      animatedRouteIndex
-    );
-
-    const swipeTranslationAnimatedStyle =
-      useCarouselSwipeTranslationAnimatedStyle(swipeTranslationX);
-
+    //#region render
     return (
       <GestureDetector gesture={swipePanGesture}>
-        <View style={[styles.container, style]}>
+        <View style={[styles.container]}>
           {navigationState.routes.map((route, index) => {
             const shouldRender = computeShouldRenderRoute(index);
-            const renderOffset = index * sceneContainerWidth;
+            const renderOffset = index * translationPerSceneContainer;
             return (
               <Animated.View
                 key={route.key}
@@ -172,22 +117,16 @@ const TabViewCarousel = React.memo(
                   swipeTranslationAnimatedStyle,
                 ]}
               >
-                <SceneWrapper
-                  routeIndex={index}
-                  smoothJump={smoothJump}
-                  prevRouteTranslationX={prevRouteTranslationX}
-                  prevRouteIndexSharedValue={prevRouteIndexSharedValue}
-                  routeIndexToJumpToSharedValue={routeIndexToJumpToSharedValue}
-                >
+                <SceneWrapper routeIndex={index}>
                   {shouldRender && (
                     <LazyLoader
-                      isLazyLoadingEnabled={
+                      shouldLazyLoad={
                         index !== initialRouteIndex && isLazyLoadingEnabled
                       }
                       onMount={() => handleSceneMount(index)}
                     >
                       {renderScene({
-                        layout,
+                        layout: tabViewLayout,
                         route,
                         animatedRouteIndex,
                         jumpTo: jumpToRoute,
@@ -200,6 +139,19 @@ const TabViewCarousel = React.memo(
           })}
         </View>
       </GestureDetector>
+    );
+  })
+  //#endregion
+);
+
+const TabViewCarousel = React.memo(
+  forwardRef<CarouselImperativeHandle, TabViewCarouselProps>((props, ref) => {
+    return (
+      <CarouselContextProvider>
+        <JumpContextProvider>
+          <TabViewCarouselWithoutProviders {...props} ref={ref} />
+        </JumpContextProvider>
+      </CarouselContextProvider>
     );
   })
 );

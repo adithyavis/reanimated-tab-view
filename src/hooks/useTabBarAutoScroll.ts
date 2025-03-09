@@ -14,7 +14,7 @@ export const useTabBarAutoScroll = (
   currentRouteIndex: number,
   layout: Layout
 ) => {
-  const { routeIndexToTabWidthMap, routeIndexToTabOffsetMap } =
+  const { routeIndexToTabWidthMapSV, routeIndexToTabOffsetMapSV } =
     useTabLayoutContext();
 
   const autoScrollToRouteIndex = useCallback(
@@ -25,7 +25,7 @@ export const useTabBarAutoScroll = (
         ...params,
       };
       if (shouldScrollToIndex) {
-        const width = routeIndexToTabWidthMap.value[routeIndex] ?? 0;
+        const width = routeIndexToTabWidthMapSV.value[routeIndex] ?? 0;
         const viewOffset = layout.width / 2 - width / 2;
         flatListRef.current?.scrollToIndex({
           index: routeIndex,
@@ -33,8 +33,8 @@ export const useTabBarAutoScroll = (
           animated,
         });
       } else {
-        let offset = routeIndexToTabOffsetMap.value[routeIndex] ?? 0;
-        const width = routeIndexToTabWidthMap.value[routeIndex] ?? 0;
+        let offset = routeIndexToTabOffsetMapSV.value[routeIndex] ?? 0;
+        const width = routeIndexToTabWidthMapSV.value[routeIndex] ?? 0;
         offset -= layout.width / 2 - width / 2;
         flatListRef.current?.scrollToOffset({
           offset,
@@ -45,8 +45,8 @@ export const useTabBarAutoScroll = (
     [
       flatListRef,
       layout.width,
-      routeIndexToTabOffsetMap.value,
-      routeIndexToTabWidthMap.value,
+      routeIndexToTabOffsetMapSV.value,
+      routeIndexToTabWidthMapSV.value,
     ]
   );
 
@@ -61,8 +61,8 @@ export const useTabBarAutoScroll = (
 
   const handleScrollToIndexFailed = useCallback(
     ({ index: routeIndex }: { index: number }) => {
-      let offset = routeIndexToTabOffsetMap.value[routeIndex] ?? 0;
-      const width = routeIndexToTabWidthMap.value[routeIndex] ?? 0;
+      let offset = routeIndexToTabOffsetMapSV.value[routeIndex] ?? 0;
+      const width = routeIndexToTabWidthMapSV.value[routeIndex] ?? 0;
       offset -= layout.width / 2 + width / 2;
       flatListRef.current?.scrollToOffset({
         offset,
@@ -71,8 +71,8 @@ export const useTabBarAutoScroll = (
     [
       flatListRef,
       layout.width,
-      routeIndexToTabOffsetMap,
-      routeIndexToTabWidthMap,
+      routeIndexToTabOffsetMapSV.value,
+      routeIndexToTabWidthMapSV.value,
     ]
   );
 

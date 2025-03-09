@@ -1,52 +1,51 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import Animated, {
-  useAnimatedStyle,
-  type SharedValue,
-} from 'react-native-reanimated';
+import Animated, { useAnimatedStyle } from 'react-native-reanimated';
+import { usePropsContext } from '../providers/Props';
+import { useJumpContext } from '../providers/Jump';
 
 type SceneWrapperProps = {
   routeIndex: number;
-  smoothJump: boolean;
-  prevRouteIndexSharedValue: SharedValue<number>;
-  prevRouteTranslationX: SharedValue<number>;
-  routeIndexToJumpToSharedValue: SharedValue<number | null>;
 };
 
 const SceneWrapper: React.FC<SceneWrapperProps> = React.memo(
-  ({
-    routeIndex,
-    smoothJump,
-    prevRouteIndexSharedValue,
-    prevRouteTranslationX,
-    routeIndexToJumpToSharedValue,
-    children,
-  }) => {
+  ({ routeIndex, children }) => {
+    const { jumpMode } = usePropsContext();
+    const {
+      smoothJumpStartRouteIndexSV,
+      jumpEndRouteIndexSV,
+      smoothJumpStartRouteTranslationXSV,
+    } = useJumpContext();
+
     const sceneWrapperAnimatedStyle = useAnimatedStyle(() => {
-      if (!smoothJump) {
+      if (jumpMode !== 'smooth') {
         return { transform: [{ translateX: 0 }], opacity: 1 };
       }
-      const isPrevRoute = routeIndex === prevRouteIndexSharedValue.value;
+      const isPrevRoute = routeIndex === smoothJumpStartRouteIndexSV.value;
       const isInBetweenPrevAndJumpRoute =
-        routeIndexToJumpToSharedValue.value == null
+        jumpEndRouteIndexSV.value == null
           ? false
           : routeIndex >
               Math.min(
-                prevRouteIndexSharedValue.value,
-                routeIndexToJumpToSharedValue.value
+                smoothJumpStartRouteIndexSV.value,
+                jumpEndRouteIndexSV.value
               ) &&
             routeIndex <
               Math.max(
-                prevRouteIndexSharedValue.value,
-                routeIndexToJumpToSharedValue.value
+                smoothJumpStartRouteIndexSV.value,
+                jumpEndRouteIndexSV.value
               );
       return {
         transform: [
-          { translateX: isPrevRoute ? prevRouteTranslationX.value : 0 },
+          {
+            translateX: isPrevRoute
+              ? smoothJumpStartRouteTranslationXSV.value
+              : 0,
+          },
         ],
         opacity: !isInBetweenPrevAndJumpRoute ? 1 : 0,
       };
-    }, [routeIndex, smoothJump, prevRouteTranslationX]);
+    }, [routeIndex, jumpMode, smoothJumpStartRouteTranslationXSV]);
     return (
       <Animated.View
         style={[styles.prevRouteSceneWrapper, sceneWrapperAnimatedStyle]}

@@ -23,21 +23,22 @@ Additionally, reanimated-tab-view also provides the following features
 
 - 3 render modes to render the tab view ("all", "windowed" and "lazy"). Can be modified using the `renderMode` prop.
 
-  - All render mode renders all the scenes in one go, during the initial tab view mount. When the number of scenes is large, it is recommended to use the window mode/lazy mode.
-  - Windowed render mode renders a window of scenes, including the current scene and the scenes adjascent to it. This is the default render mode. It is recommended to use this render mode when the number of scenes is large but when the render cost of each scene is not high.
+  - All render mode renders all the scenes in one go, during the initial tab view mount. When the number of scenes is large, it is recommended to use the window mode/lazy mode. This is the default render mode.
+  - Windowed render mode renders a window of scenes, including the current scene and the scenes adjascent to it. It is recommended to use this render mode when the number of scenes is large but when the render cost of each scene is not high.
   - Lazy render mode renders the scenes one by one when they are first mounted to the view. It is recommended to use this render mode when the number of scenes is large and when the render cost of each scene is high.
 
-- Dynamic widths for tabs, based on the tab title length. For eg., if the tab title is "Tab one", the width of the tab will be smaller than if the tab title is "Tab hundred one".
+- Dynamic widths for tabs, based on the tab title length. For eg., if the tab title is "Tab one", the width of the tab will be smaller than if the tab title is "Tab hundred one". Can be modified using the `tabBarDynamicWidthEnabled` prop.
 
   - This feature is in accordance with the Material Design spec.
-  - This is disabled by default. To enable this, set the `tabBarScrollEnabled` prop to `true`, or set the `tabBarType` prop to `'primary'`.
+  - By default, this feature is enabled when the `tabBarType` prop is set to `'primary'`.
 
     <img src="./assets/dynamic_tab_width.gif" width="360">
 
-- Customisable jump-to animations (smooth jump or scroll jump). Can be modified using the `smoothJump` prop.
+- Customisable jump-to animations (smooth jump or scroll jump). Can be modified using the `jumpMode` prop.
 
-  - Scroll jump: When jumped from tab one to tab four, the jump animation scrolls through the scenes in between (scenes of tab two and tab three). In case the scenes in between are not rendered (while using lazy/windowed render modes), the jump-to animation will result in a momentary blank splash.
+  - Scrolling jump: When jumped from tab one to tab four, the jump animation scrolls through the scenes in between (scenes of tab two and tab three). In case the scenes in between haven't been already rendered (while using lazy/windowed render modes), the jump-to animation will result in a momentary blank splash.
   - Smooth jump: When jumped from tab one to tab four, the jump animation smoothly animates to the target scene of tab four without scrolling through the scenes in between. This helps prevent blank splashes when using lazy/windowed render modes. This is enabled by default.
+  - No animation: When jumped from tab one to tab four, the jump animation does not animate to the target scene of tab four. This is useful when you want to jump to a scene without any animation.
 
     |                   Smooth Jump                    |                   Scroll Jump                    |
     | :----------------------------------------------: | :----------------------------------------------: |
@@ -124,25 +125,37 @@ export default function TabViewExample() {
 
 ## Props
 
-| Name                | Description                                                               | Required | Type                        | Default     |
-| ------------------- | ------------------------------------------------------------------------- | -------- | --------------------------- | ----------- |
-| navigationState     | The state of the navigation including the index and routes.               | Yes      | Object                      |             |
-| renderScene         | A function that renders the scene for a given route.                      | Yes      | Function                    |             |
-| onIndexChange       | A function that is called when the index changes.                         | Yes      | Function                    |             |
-| initialLayout       | The initial layout of the tab view.                                       | No       | Object                      | undefined   |
-| sceneContainerStyle | The style for the scene container.                                        | No       | Object                      | undefined   |
-| keyboardDismissMode | Specifies how to dismiss the keyboard.                                    | No       | String                      | 'none'      |
-| swipeEnabled        | Enables or disables swipe gestures.                                       | No       | Boolean                     | true        |
-| renderMode          | Specifies the layout mode of the tab view.                                | No       | `'windowed'\|'lazy'\|'all'` | "windowed"  |
-| tabBarPosition      | Specifies the position of the tab bar.                                    | No       | `'top'\|'bottom'`           | 'top'       |
-| tabBarType          | Specifies the type of the tab bar, according to the Material Design spec. | No       | `'primary'\|'secondary'`    | 'secondary' |
-| smoothJump          | Enables or disables smooth jumping between tabs.                          | No       | Boolean                     | true        |
-| tabBarScrollEnabled | Enables or disables scrollable tab bar.                                   | No       | Boolean                     | true        |
-| renderTabBar        | Custom method to render the tab bar.                                      | No       | Function                    | undefined   |
-| onSwipeEnd          | Callback function for when a swipe gesture ends.                          | No       | Function                    | undefined   |
-| onSwipeStart        | Callback function for when a swipe gesture starts.                        | No       | Function                    | undefined   |
+| Name                | Description                                                                                    | Required | Type                                                              | Default   |
+| ------------------- | ---------------------------------------------------------------------------------------------- | -------- | ----------------------------------------------------------------- | --------- |
+| navigationState     | The state of the navigation including the index and routes.                                    | Yes      | `{index: number; routes: Route;}`                                 |           |
+| initialLayout       | The initial layout of the tab view.                                                            | No       | `Partial<{width: number; height: number;}>`                       | undefined |
+| sceneContainerStyle | The style for the scene container.                                                             | No       | `StyleProp<Animated.AnimateStyle<StyleProp<ViewStyle>>>`          | undefined |
+| sceneContainerGap   | The gap between each scene.                                                                    | No       | Number                                                            | 0         |
+| keyboardDismissMode | Specifies how to dismiss the keyboard.                                                         | No       | `'auto'\|'on-drag'\|'none'`                                       | 'auto'    |
+| animatedRouteIndex  | A callback equivalent. Pass a shared value and its value gets updated when tab view is swipeds | No       | `SharedValue<number>`                                             | undefined |
+| swipeEnabled        | Enables or disables swipe gestures.                                                            | No       | Boolean                                                           | true      |
+| sceneContainerGap   | The gap between each scene.                                                                    | No       | Number                                                            | 0         |
+| renderMode          | Specifies the layout mode of the tab view.                                                     | No       | `'windowed'\|'lazy'\|'all'`                                       | "all"     |
+| jumpMode            | Specifies the jump mode of the tab view.                                                       | No       | `'smooth'\|'scrolling'\|'no-animation'`                           | "smooth"  |
+| tabBarConfig        | Configuration for the tab bar.                                                                 | No       | `TabBarConfig`- For details, see below.                           | undefined |
+| renderScene         | A function that renders the scene for a given route.                                           | Yes      | `(props: SceneRendererProps & {route: Route}) => React.ReactNode` |           |
+| onIndexChange       | A function that is called when the index changes.                                              | Yes      | `(index:number) => void`                                          |           |
+| onSwipeEnd          | Callback function for when a swipe gesture ends.                                               | No       | Function                                                          | undefined |
+| onSwipeStart        | Callback function for when a swipe gesture starts.                                             | No       | Function                                                          | undefined |
 
-## Author
+tabBarConfig properties are as follows:
+
+| Name                      | Description                                                                | Required | Type                                                     | Default                                               |
+| ------------------------- | -------------------------------------------------------------------------- | -------- | -------------------------------------------------------- | ----------------------------------------------------- |
+| tabBarPosition            | Specifies the position of the tab bar.                                     | No       | `'top'\|'bottom'`                                        | 'top'                                                 |
+| tabBarType                | Specifies the type of the tab bar, according to the Material Design spec.  | No       | `'primary'\|'secondary'`                                 | 'secondary'                                           |
+| tabBarScrollEnabled       | Enables or disables scrollable tab bar.                                    | No       | Boolean                                                  | true                                                  |
+| tabBarDynamicWidthEnabled | Enables dynamic width for tabs.                                            | No       | Boolean                                                  | true for primary tab bar, false for secondary tab bar |
+| scrollableTabWidth        | The width of each tab. Applicable ONLY when `tabBarScrollEnabled` is true. | No       | Number                                                   | 100                                                   |
+| tabBarStyle               | Used to modify the style for the tab bar.                                  | No       | `StyleProp<ViewStyle>`                                   | undefined                                             |
+| tabStyle                  | Used to modify the style for each style.                                   | No       | `StyleProp<Animated.AnimateStyle<StyleProp<ViewStyle>>>` | undefined                                             |
+| tabBarIndicatorStyle      | Used to modify the style for the tab bar indicator.                        | No       | `StyleProp<Animated.AnimateStyle<StyleProp<ViewStyle>>>` | undefined                                             |
+| renderTabBar              | Custom method to render the tab bar.                                       | No       | Function                                                 | undefined                                             |
 
 - [Adithya Viswamithiran](https://github.com/adithyavis/)
 

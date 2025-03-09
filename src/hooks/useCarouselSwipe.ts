@@ -1,83 +1,86 @@
-import {
-  useCallback,
-  useMemo,
-  type Dispatch,
-  type SetStateAction,
-} from 'react';
+import { useCallback, useMemo } from 'react';
 import { Gesture } from 'react-native-gesture-handler';
 import {
   useSharedValue,
-  type SharedValue,
   runOnJS,
   withTiming,
   Easing,
   useAnimatedStyle,
 } from 'react-native-reanimated';
 import { AUTO_SWIPE_COMPLETION_DURATION } from '../constants/carousel';
-import type { Route } from '../types/common';
+import { useInternalContext } from '../providers/Internal';
+import { usePropsContext } from '../providers/Props';
+import { useJumpContext } from '../providers/Jump';
+import { useCarouselContext } from '../providers/Carousel';
 
 const ACTIVE_OFFSET_X = [-10, 10];
 
 export const useCarouselSwipePanGesture = (
-  currentRouteIndexSharedValue: SharedValue<number>,
-  swipeTranslationX: SharedValue<number>,
   updateCurrentRouteIndex: (value: number) => void,
-  sceneContainerWidth: number,
-  noOfRoutes: number,
   handleSwipeStart: () => void,
-  handleSwipeEnd: () => void,
-  _swipeEnabled = true,
-  setPrevRouteIndex: (index: number) => void,
-  prevRouteIndexSharedValue: SharedValue<number>,
-  isJumping: boolean,
-  animatedRouteIndex: SharedValue<number>
+  handleSwipeEnd: () => void
 ) => {
-  const preSwipeStartSwipeTranslationX = useSharedValue(0);
+  const {
+    currentRouteIndexSV,
+    swipeTranslationXSV,
+    translationPerSceneContainer,
+  } = useCarouselContext();
+
+  const preSwipeStartswipeTranslationXSV = useSharedValue(0);
+
+  const { noOfRoutes, animatedRouteIndex } = useInternalContext();
+  const { swipeEnabled } = usePropsContext();
+  const {
+    isJumping,
+    smoothJumpStartRouteIndexSV,
+    setSmoothJumpStartRouteIndex,
+  } = useJumpContext();
 
   const minRouteIndex = 0;
   const maxRouteIndex = noOfRoutes - 1;
-  const minSwipeTranslationX = minRouteIndex * sceneContainerWidth;
-  const maxSwipeTranslationX = maxRouteIndex * sceneContainerWidth;
+  const minswipeTranslationXSV = minRouteIndex * translationPerSceneContainer;
+  const maxswipeTranslationXSV = maxRouteIndex * translationPerSceneContainer;
 
-  const swipeEnabled = useMemo(
-    () => !isJumping && _swipeEnabled,
-    [_swipeEnabled, isJumping]
+  const gestureEnabled = useMemo(
+    () => !isJumping && swipeEnabled,
+    [swipeEnabled, isJumping]
   );
 
   const swipePanGesture = useMemo(
     () =>
       Gesture.Pan()
-        .enabled(swipeEnabled)
+        .enabled(gestureEnabled)
         .activeOffsetX(ACTIVE_OFFSET_X)
         .onStart(() => {
-          preSwipeStartSwipeTranslationX.value = swipeTranslationX.value;
+          preSwipeStartswipeTranslationXSV.value = swipeTranslationXSV.value;
           runOnJS(handleSwipeStart)();
         })
         .onUpdate(({ translationX }) => {
           const boundedTranslationX = Math.min(
-            Math.max(translationX, -sceneContainerWidth),
-            sceneContainerWidth
+            Math.max(translationX, -translationPerSceneContainer),
+            translationPerSceneContainer
           );
-          swipeTranslationX.value = Math.min(
+          swipeTranslationXSV.value = Math.min(
             Math.max(
-              preSwipeStartSwipeTranslationX.value + boundedTranslationX,
-              -1 * maxSwipeTranslationX
+              preSwipeStartswipeTranslationXSV.value + boundedTranslationX,
+              -1 * maxswipeTranslationXSV
             ),
-            -1 * minSwipeTranslationX
+            -1 * minswipeTranslationXSV
           );
           animatedRouteIndex.value =
-            -swipeTranslationX.value / sceneContainerWidth;
+            -swipeTranslationXSV.value / translationPerSceneContainer;
         })
         .onEnd(({ translationX, velocityX }) => {
-          const currentRouteIndex = currentRouteIndexSharedValue.value;
+          const currentRouteIndex = currentRouteIndexSV.value;
           const shouldInertiallySnapBackToCurrentRouteIndex =
             Math.round(
-              -(swipeTranslationX.value + velocityX) / sceneContainerWidth
+              -(swipeTranslationXSV.value + velocityX) /
+                translationPerSceneContainer
             ) === currentRouteIndex;
 
           if (shouldInertiallySnapBackToCurrentRouteIndex) {
-            swipeTranslationX.value = withTiming(
-              -currentRouteIndex * sceneContainerWidth,
+            swipeTranslationXSV.value = withTiming(
+              -currentRouteIndex * translationPerSceneContainer,
               {
                 duration: AUTO_SWIPE_COMPLETION_DURATION,
                 easing: Easing.out(Easing.ease),
@@ -109,37 +112,37 @@ export const useCarouselSwipePanGesture = (
             easing: Easing.out(Easing.ease),
           });
 
-          swipeTranslationX.value = withTiming(
-            -routeIndexToInertiallySnap * sceneContainerWidth,
+          swipeTranslationXSV.value = withTiming(
+            -routeIndexToInertiallySnap * translationPerSceneContainer,
             {
               duration: AUTO_SWIPE_COMPLETION_DURATION,
               easing: Easing.out(Easing.ease),
             },
             () => {
-              prevRouteIndexSharedValue.value = routeIndexToInertiallySnap;
-              runOnJS(setPrevRouteIndex)(routeIndexToInertiallySnap);
+              smoothJumpStartRouteIndexSV.value = routeIndexToInertiallySnap;
+              runOnJS(setSmoothJumpStartRouteIndex)(routeIndexToInertiallySnap);
             }
           );
 
-          currentRouteIndexSharedValue.value = routeIndexToInertiallySnap;
+          currentRouteIndexSV.value = routeIndexToInertiallySnap;
           runOnJS(updateCurrentRouteIndex)(routeIndexToInertiallySnap);
           runOnJS(handleSwipeEnd)();
         }),
     [
-      swipeEnabled,
-      preSwipeStartSwipeTranslationX,
-      swipeTranslationX,
+      gestureEnabled,
+      preSwipeStartswipeTranslationXSV,
+      swipeTranslationXSV,
       handleSwipeStart,
-      sceneContainerWidth,
-      maxSwipeTranslationX,
-      minSwipeTranslationX,
+      translationPerSceneContainer,
+      maxswipeTranslationXSV,
+      minswipeTranslationXSV,
       animatedRouteIndex,
-      currentRouteIndexSharedValue,
+      currentRouteIndexSV,
       updateCurrentRouteIndex,
       handleSwipeEnd,
       maxRouteIndex,
-      prevRouteIndexSharedValue,
-      setPrevRouteIndex,
+      smoothJumpStartRouteIndexSV,
+      setSmoothJumpStartRouteIndex,
     ]
   );
 
@@ -147,26 +150,30 @@ export const useCarouselSwipePanGesture = (
 };
 
 export const useCarouselJumpToIndex = (
-  routes: Route[],
-  currentRouteIndexSharedValue: SharedValue<number>,
-  swipeTranslationX: SharedValue<number>,
-  sceneContainerWidth: number,
-  noOfRoutes: number,
-  updateCurrentRouteIndex: (value: number) => void,
-  prevRouteTranslationX: SharedValue<number>,
-  setPrevRouteIndex: (value: number) => void,
-  prevRouteIndexSharedValue: SharedValue<number>,
-  routeIndexToJumpToSharedValue: SharedValue<number | null>,
-  smoothJump: boolean,
-  setIsJumping: Dispatch<SetStateAction<boolean>>,
-  animatedRouteIndex: SharedValue<number>
+  updateCurrentRouteIndex: (value: number) => void
 ) => {
+  const {
+    currentRouteIndexSV,
+    swipeTranslationXSV,
+    translationPerSceneContainer,
+  } = useCarouselContext();
+
+  const { routes, noOfRoutes, animatedRouteIndex } = useInternalContext();
+  const { jumpMode } = usePropsContext();
+  const {
+    smoothJumpStartRouteIndexSV,
+    setSmoothJumpStartRouteIndex,
+    smoothJumpStartRouteTranslationXSV,
+    jumpEndRouteIndexSV,
+    setIsJumping,
+  } = useJumpContext();
+
   const minRouteIndex = 0;
   const maxRouteIndex = noOfRoutes - 1;
 
   const jumpToRoute = useCallback(
     (key: string) => {
-      const currentRouteIndex = currentRouteIndexSharedValue.value;
+      const currentRouteIndex = currentRouteIndexSV.value;
       const routeIndexToJumpTo = routes.findIndex((route) => route.key === key);
       /** Only jump if route is in between the min and max ranges,
        * and not equal to current route index
@@ -181,9 +188,10 @@ export const useCarouselJumpToIndex = (
       }
 
       setIsJumping(true);
-      routeIndexToJumpToSharedValue.value = routeIndexToJumpTo;
+      jumpEndRouteIndexSV.value = routeIndexToJumpTo;
 
-      if (smoothJump) {
+      /** For smooth jump, translate to the adjacent route of the route to jump to */
+      if (jumpMode === 'smooth') {
         const shouldJumpLeft = routeIndexToJumpTo > currentRouteIndex;
         let tempRouteIndexToJumpTo: number;
         if (shouldJumpLeft) {
@@ -191,62 +199,74 @@ export const useCarouselJumpToIndex = (
         } else {
           tempRouteIndexToJumpTo = routeIndexToJumpTo + 1;
         }
-        swipeTranslationX.value = -tempRouteIndexToJumpTo * sceneContainerWidth;
-        prevRouteTranslationX.value =
-          (tempRouteIndexToJumpTo - currentRouteIndex) * sceneContainerWidth;
+        swipeTranslationXSV.value =
+          -tempRouteIndexToJumpTo * translationPerSceneContainer;
+        smoothJumpStartRouteTranslationXSV.value =
+          (tempRouteIndexToJumpTo - currentRouteIndex) *
+          translationPerSceneContainer;
       }
 
-      currentRouteIndexSharedValue.value = routeIndexToJumpTo;
+      currentRouteIndexSV.value = routeIndexToJumpTo;
       updateCurrentRouteIndex(routeIndexToJumpTo);
 
-      animatedRouteIndex.value = withTiming(routeIndexToJumpTo, {
-        duration: AUTO_SWIPE_COMPLETION_DURATION,
-        easing: Easing.ease,
-      });
-
-      swipeTranslationX.value = withTiming(
-        -routeIndexToJumpTo * sceneContainerWidth,
-        {
+      if (jumpMode !== 'no-animation') {
+        animatedRouteIndex.value = withTiming(routeIndexToJumpTo, {
           duration: AUTO_SWIPE_COMPLETION_DURATION,
           easing: Easing.ease,
-        },
-        () => {
-          routeIndexToJumpToSharedValue.value = null;
-          prevRouteIndexSharedValue.value = routeIndexToJumpTo;
-          prevRouteTranslationX.value = 0;
-          runOnJS(setPrevRouteIndex)(routeIndexToJumpTo);
-          runOnJS(setIsJumping)(false);
-        }
-      );
+        });
+        swipeTranslationXSV.value = withTiming(
+          -routeIndexToJumpTo * translationPerSceneContainer,
+          {
+            duration: AUTO_SWIPE_COMPLETION_DURATION,
+            easing: Easing.ease,
+          },
+          () => {
+            jumpEndRouteIndexSV.value = null;
+            smoothJumpStartRouteIndexSV.value = routeIndexToJumpTo;
+            smoothJumpStartRouteTranslationXSV.value = 0;
+            runOnJS(setSmoothJumpStartRouteIndex)(routeIndexToJumpTo);
+            runOnJS(setIsJumping)(false);
+          }
+        );
+      } else {
+        animatedRouteIndex.value = routeIndexToJumpTo;
+        swipeTranslationXSV.value =
+          -routeIndexToJumpTo * translationPerSceneContainer;
+        jumpEndRouteIndexSV.value = null;
+        smoothJumpStartRouteIndexSV.value = routeIndexToJumpTo;
+        smoothJumpStartRouteTranslationXSV.value = 0;
+        runOnJS(setSmoothJumpStartRouteIndex)(routeIndexToJumpTo);
+        runOnJS(setIsJumping)(false);
+      }
     },
     [
-      animatedRouteIndex,
-      currentRouteIndexSharedValue,
-      maxRouteIndex,
-      prevRouteIndexSharedValue,
-      prevRouteTranslationX,
-      routeIndexToJumpToSharedValue,
+      currentRouteIndexSV,
       routes,
-      sceneContainerWidth,
+      maxRouteIndex,
       setIsJumping,
-      setPrevRouteIndex,
-      smoothJump,
-      swipeTranslationX,
+      jumpEndRouteIndexSV,
+      jumpMode,
       updateCurrentRouteIndex,
+      animatedRouteIndex,
+      swipeTranslationXSV,
+      translationPerSceneContainer,
+      smoothJumpStartRouteTranslationXSV,
+      smoothJumpStartRouteIndexSV,
+      setSmoothJumpStartRouteIndex,
     ]
   );
 
   return jumpToRoute;
 };
 
-export const useCarouselSwipeTranslationAnimatedStyle = (
-  swipeTranslationX: SharedValue<number>
-) => {
+export const useCarouselSwipeTranslationAnimatedStyle = () => {
+  const { swipeTranslationXSV } = useCarouselContext();
+
   const swipeTranslationAnimatedStyle = useAnimatedStyle(
     () => ({
-      transform: [{ translateX: swipeTranslationX.value }],
+      transform: [{ translateX: swipeTranslationXSV.value }],
     }),
-    [swipeTranslationX]
+    [swipeTranslationXSV]
   );
   return swipeTranslationAnimatedStyle;
 };

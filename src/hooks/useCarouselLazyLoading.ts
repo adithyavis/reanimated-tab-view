@@ -1,19 +1,20 @@
 import { useCallback, useMemo, useState } from 'react';
-import type { RenderMode } from '../types/common';
-import {
-  type SharedValue,
-  useAnimatedReaction,
-  runOnJS,
-} from 'react-native-reanimated';
+import { useAnimatedReaction, runOnJS } from 'react-native-reanimated';
+import { useInternalContext } from '../providers/Internal';
+import { usePropsContext } from '../providers/Props';
+import { useWindowedCarouselRouteIndices } from './useCarousel';
+import { useJumpContext } from '../providers/Jump';
+import { useCarouselContext } from '../providers/Carousel';
 
-export const useCarouselLazyLoading = (
-  renderMode: RenderMode,
-  initialRouteIndex: number,
-  currentRouteIndexSharedValue: SharedValue<number>,
-  smallestRouteIndexToRender: number,
-  largestRouteIndexToRender: number,
-  prevRouteIndex: number
-) => {
+export const useCarouselLazyLoading = () => {
+  const { renderMode } = usePropsContext();
+  const { initialRouteIndex } = useInternalContext();
+  const { smoothJumpStartRouteIndex } = useJumpContext();
+  const { currentRouteIndexSV } = useCarouselContext();
+
+  const routeIndicesRangeToRenderForWindowed =
+    useWindowedCarouselRouteIndices();
+
   const [lazyLoadedRouteIndices, setLazyLoadedRouteIndices] = useState<
     number[]
   >([initialRouteIndex]);
@@ -28,7 +29,7 @@ export const useCarouselLazyLoading = (
   }, []);
 
   useAnimatedReaction(
-    () => currentRouteIndexSharedValue.value,
+    () => currentRouteIndexSV.value,
     (index: number) => {
       runOnJS(appendTolazyLoadedRouteIndices)(index);
     },
@@ -53,9 +54,9 @@ export const useCarouselLazyLoading = (
     (index: number) => {
       if (renderMode === 'windowed') {
         return (
-          (index >= smallestRouteIndexToRender &&
-            index <= largestRouteIndexToRender) ||
-          index === prevRouteIndex
+          (index >= routeIndicesRangeToRenderForWindowed.minRouteIndex &&
+            index <= routeIndicesRangeToRenderForWindowed.maxRouteIndex) ||
+          index === smoothJumpStartRouteIndex
         );
       }
       if (renderMode === 'lazy') {
@@ -64,11 +65,10 @@ export const useCarouselLazyLoading = (
       return true;
     },
     [
-      largestRouteIndexToRender,
+      routeIndicesRangeToRenderForWindowed,
       lazyLoadedRouteIndices,
       renderMode,
-      prevRouteIndex,
-      smallestRouteIndexToRender,
+      smoothJumpStartRouteIndex,
     ]
   );
 
