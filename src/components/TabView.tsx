@@ -6,7 +6,9 @@ import React, {
   useState,
 } from 'react';
 import { View, StyleSheet } from 'react-native';
-import { useSharedValue } from 'react-native-reanimated';
+import Animated, { useSharedValue } from 'react-native-reanimated';
+import { GestureDetector } from 'react-native-gesture-handler';
+
 import TabViewCarousel, {
   type CarouselImperativeHandle,
 } from './TabViewCarousel';
@@ -22,27 +24,43 @@ import {
 import { PropsContextProvider, usePropsContext } from '../providers/Props';
 import { SCROLLABLE_TAB_WIDTH } from '../constants/tabBar';
 import useHandleIndexChange from '../hooks/useHandlerIndexChange';
+import { TabViewHeader } from './TabViewHeader';
+import { ScrollableContextProvider } from '../providers/Scrollable';
+import { useGestureContentTranslateYStyle } from '../hooks/scrollable/useGestureContentTranslateYStyle';
+import { useScrollLikePanGesture } from '../hooks/scrollable/useScrollLikePanGesture';
 
 type TabViewWithoutProvidersProps = {
   TabViewHeaderComponent?: React.ReactNode;
 };
 export const TabViewWithoutProviders = React.memo<TabViewWithoutProvidersProps>(
   ({ TabViewHeaderComponent }) => {
+    //#region context
     const { tabBarPosition, tabBarStyle, tabStyle, renderTabBar } =
       usePropsContext();
 
-    const {
-      tabViewLayout,
-      tabViewCarouselRef,
-      setTabViewLayout,
-      setTabViewHeaderLayout,
-    } = useInternalContext();
+    const { tabViewLayout, tabViewCarouselRef, setTabViewLayout } =
+      useInternalContext();
+    //#endregion
 
     //#region styles
     const containerLayoutStyle = useMemo(() => {
       const width: number | `${number}%` = tabViewLayout?.width || '100%';
       return { width };
     }, [tabViewLayout]);
+
+    const contentStyle = useMemo(() => {
+      return tabViewLayout.height
+        ? {
+            height: tabViewLayout.height,
+          }
+        : { flex: 1 };
+    }, [tabViewLayout]);
+
+    const animatedTranslateYStyle = useGestureContentTranslateYStyle();
+    //#endregion
+
+    //#region variables
+    const scrollLikePanGesture = useScrollLikePanGesture();
     //#endregion
 
     //#region hooks
@@ -60,18 +78,6 @@ export const TabViewWithoutProviders = React.memo<TabViewWithoutProvidersProps>(
         }));
       },
       [setTabViewLayout]
-    );
-
-    const onTabViewHeaderLayout = useCallback(
-      ({ nativeEvent }: LayoutChangeEvent) => {
-        const { width, height } = nativeEvent.layout;
-        setTabViewHeaderLayout((prevLayout) => ({
-          ...prevLayout,
-          width,
-          height,
-        }));
-      },
-      [setTabViewHeaderLayout]
     );
     //#endregion
 
@@ -96,17 +102,21 @@ export const TabViewWithoutProviders = React.memo<TabViewWithoutProvidersProps>(
 
     //#region render
     return (
-      <View
-        style={[styles.container, containerLayoutStyle]}
-        onLayout={onTabViewLayout}
-      >
-        <View onLayout={onTabViewHeaderLayout}>{TabViewHeaderComponent}</View>
-        <View style={styles.content}>
-          {tabBarPosition === 'top' && tabBar}
-          <TabViewCarousel ref={tabViewCarouselRef} />
-          {tabBarPosition === 'bottom' && tabBar}
+      <GestureDetector gesture={scrollLikePanGesture}>
+        <View
+          style={[styles.container, containerLayoutStyle]}
+          onLayout={onTabViewLayout}
+        >
+          <TabViewHeader style={animatedTranslateYStyle}>
+            {TabViewHeaderComponent}
+          </TabViewHeader>
+          <Animated.View style={[contentStyle, animatedTranslateYStyle]}>
+            {tabBarPosition === 'top' && tabBar}
+            <TabViewCarousel ref={tabViewCarouselRef} />
+            {tabBarPosition === 'bottom' && tabBar}
+          </Animated.View>
         </View>
-      </View>
+      </GestureDetector>
     );
     //#endregion
   }
@@ -280,9 +290,11 @@ export const TabView = React.memo(
       <PropsContextProvider value={propsContextValue}>
         <InternalContextProvider value={internalContextValue}>
           <TabLayoutContextProvider>
-            <TabViewWithoutProviders
-              TabViewHeaderComponent={TabViewHeaderComponent}
-            />
+            <ScrollableContextProvider>
+              <TabViewWithoutProviders
+                TabViewHeaderComponent={TabViewHeaderComponent}
+              />
+            </ScrollableContextProvider>
           </TabLayoutContextProvider>
         </InternalContextProvider>
       </PropsContextProvider>
@@ -293,8 +305,6 @@ export const TabView = React.memo(
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  content: {
-    flex: 1,
+    overflow: 'hidden',
   },
 });
