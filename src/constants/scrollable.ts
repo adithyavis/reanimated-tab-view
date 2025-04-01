@@ -10,3 +10,11 @@ export enum GestureSource {
   PAN = 'PAN',
   SCROLL = 'SCROLL',
 }
+
+export enum ScrollableType {
+  SCROLL_VIEW = 'SCROLL_VIEW',
+  FLAT_LIST = 'FLAT_LIST',
+  VIRTUALIZED_LIST = 'VIRTUALIZED_LIST',
+  SECTION_LIST = 'SECTION_LIST',
+  FLASH_LIST = 'FLASH_LIST',
+}
