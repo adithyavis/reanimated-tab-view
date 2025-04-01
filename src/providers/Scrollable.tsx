@@ -1,9 +1,5 @@
 import React, { createContext, useContext, useMemo } from 'react';
-import {
-  useSharedValue,
-  type SharedValue,
-  useDerivedValue,
-} from 'react-native-reanimated';
+import { useSharedValue, type SharedValue } from 'react-native-reanimated';
 import { useInternalContext } from '../providers/Internal';
 import { GestureSource } from '../constants/scrollable';
 
