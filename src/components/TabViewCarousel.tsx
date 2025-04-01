@@ -19,6 +19,7 @@ import {
   useCarouselContext,
 } from '../providers/Carousel';
 import { Scene } from './Scene';
+import { SceneRendererContextProvider } from '../providers/SceneRenderer';
 
 export type CarouselImperativeHandle = {
   jumpToRoute: (route: string) => void;
@@ -121,7 +122,9 @@ const TabViewCarouselWithoutProviders = React.memo(
                       }
                       onMount={() => handleSceneMount(index)}
                     >
-                      <Scene renderScene={renderScene} route={route} />
+                      <SceneRendererContextProvider route={route} index={index}>
+                        <Scene renderScene={renderScene} route={route} />
+                      </SceneRendererContextProvider>
                     </LazyLoader>
                   )}
                 </SceneWrapper>
