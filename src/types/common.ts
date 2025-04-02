@@ -1,3 +1,5 @@
+import type { SharedValue } from 'react-native-reanimated';
+
 export type Route = {
   key: string;
   title?: string;
@@ -22,4 +24,9 @@ export type Layout = {
 
 export type SceneRendererProps = {
   route: Route;
+};
+
+export type HeaderRendererProps = {
+  collapsedPercentage: SharedValue<number>;
+  collapsedHeaderHeight: SharedValue<number>;
 };

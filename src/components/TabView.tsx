@@ -29,98 +29,91 @@ import { ScrollableContextProvider } from '../providers/Scrollable';
 import { useGestureContentTranslateYStyle } from '../hooks/scrollable/useGestureContentTranslateYStyle';
 import { useScrollLikePanGesture } from '../hooks/scrollable/useScrollLikePanGesture';
 
-type TabViewWithoutProvidersProps = {
-  TabViewHeaderComponent?: React.ReactNode;
-};
-export const TabViewWithoutProviders = React.memo<TabViewWithoutProvidersProps>(
-  ({ TabViewHeaderComponent }) => {
-    //#region context
-    const { tabBarPosition, tabBarStyle, tabStyle, renderTabBar } =
-      usePropsContext();
+export const TabViewWithoutProviders = React.memo(() => {
+  //#region context
+  const { tabBarPosition, tabBarStyle, tabStyle, renderTabBar } =
+    usePropsContext();
 
-    const { tabViewLayout, tabViewCarouselRef, setTabViewLayout } =
-      useInternalContext();
-    //#endregion
+  const { tabViewLayout, tabViewCarouselRef, setTabViewLayout } =
+    useInternalContext();
+  //#endregion
 
-    //#region styles
-    const containerLayoutStyle = useMemo(() => {
-      const width: number | `${number}%` = tabViewLayout?.width || '100%';
-      return { width };
-    }, [tabViewLayout]);
+  //#region styles
+  const containerLayoutStyle = useMemo(() => {
+    const width: number | `${number}%` = tabViewLayout?.width || '100%';
+    return { width };
+  }, [tabViewLayout]);
 
-    const contentStyle = useMemo(() => {
-      return tabViewLayout.height
-        ? {
-            height: tabViewLayout.height,
-          }
-        : { flex: 1 };
-    }, [tabViewLayout]);
+  const contentStyle = useMemo(() => {
+    return tabViewLayout.height
+      ? {
+          height: tabViewLayout.height,
+        }
+      : { flex: 1 };
+  }, [tabViewLayout]);
 
-    const animatedTranslateYStyle = useGestureContentTranslateYStyle();
-    //#endregion
+  const animatedTranslateYStyle = useGestureContentTranslateYStyle();
+  //#endregion
 
-    //#region variables
-    const scrollLikePanGesture = useScrollLikePanGesture();
-    //#endregion
+  //#region variables
+  const scrollLikePanGesture = useScrollLikePanGesture();
+  //#endregion
 
-    //#region hooks
-    useHandleIndexChange();
-    //#endregion
+  //#region hooks
+  useHandleIndexChange();
+  //#endregion
 
-    //#region callbacks
-    const onTabViewLayout = useCallback(
-      ({ nativeEvent }: LayoutChangeEvent) => {
-        const { width, height } = nativeEvent.layout;
-        setTabViewLayout((prevLayout) => ({
-          ...prevLayout,
-          width,
-          height,
-        }));
-      },
-      [setTabViewLayout]
-    );
-    //#endregion
+  //#region callbacks
+  const onTabViewLayout = useCallback(
+    ({ nativeEvent }: LayoutChangeEvent) => {
+      const { width, height } = nativeEvent.layout;
+      setTabViewLayout((prevLayout) => ({
+        ...prevLayout,
+        width,
+        height,
+      }));
+    },
+    [setTabViewLayout]
+  );
+  //#endregion
 
-    //#region render memos
-    const tabBar = useMemo(() => {
-      if (renderTabBar) {
-        return renderTabBar({
-          getLabelText: (scene) => scene.route.title,
-          tabStyle,
-          style: tabBarStyle,
-        });
-      }
-      return (
-        <TabBar
-          getLabelText={(scene) => scene.route.title}
-          tabStyle={tabStyle}
-          style={tabBarStyle}
-        />
-      );
-    }, [renderTabBar, tabStyle, tabBarStyle]);
-    //#endregion
-
-    //#region render
+  //#region render memos
+  const tabBar = useMemo(() => {
+    if (renderTabBar) {
+      return renderTabBar({
+        getLabelText: (scene) => scene.route.title,
+        tabStyle,
+        style: tabBarStyle,
+      });
+    }
     return (
-      <GestureDetector gesture={scrollLikePanGesture}>
-        <View
-          style={[styles.container, containerLayoutStyle]}
-          onLayout={onTabViewLayout}
-        >
-          <TabViewHeader style={animatedTranslateYStyle}>
-            {TabViewHeaderComponent}
-          </TabViewHeader>
-          <Animated.View style={[contentStyle, animatedTranslateYStyle]}>
-            {tabBarPosition === 'top' && tabBar}
-            <TabViewCarousel ref={tabViewCarouselRef} />
-            {tabBarPosition === 'bottom' && tabBar}
-          </Animated.View>
-        </View>
-      </GestureDetector>
+      <TabBar
+        getLabelText={(scene) => scene.route.title}
+        tabStyle={tabStyle}
+        style={tabBarStyle}
+      />
     );
-    //#endregion
-  }
-);
+  }, [renderTabBar, tabStyle, tabBarStyle]);
+  //#endregion
+
+  //#region render
+  return (
+    <GestureDetector gesture={scrollLikePanGesture}>
+      <View
+        style={[styles.container, containerLayoutStyle]}
+        onLayout={onTabViewLayout}
+      >
+        <TabViewHeader style={animatedTranslateYStyle} />
+        <Animated.View style={[contentStyle, animatedTranslateYStyle]}>
+          {tabBarPosition === 'top' && tabBar}
+          <TabViewCarousel ref={tabViewCarouselRef} />
+          {tabBarPosition === 'bottom' && tabBar}
+        </Animated.View>
+      </View>
+    </GestureDetector>
+  );
+  //#endregion
+});
 
 export const TabView = React.memo(
   React.forwardRef<TabViewMethods, TabViewProps>((props, ref) => {
@@ -136,7 +129,7 @@ export const TabView = React.memo(
       tabBarConfig,
       jumpMode = 'smooth',
       sceneContainerGap = 0,
-      TabViewHeaderComponent,
+      renderHeader,
       renderScene,
       onIndexChange,
       onSwipeEnd,
@@ -237,6 +230,7 @@ export const TabView = React.memo(
         providedAnimatedRouteIndexSV,
         renderTabBar,
         renderScene,
+        renderHeader,
         onIndexChange,
         onSwipeEnd,
         onSwipeStart,
@@ -260,6 +254,7 @@ export const TabView = React.memo(
       providedAnimatedRouteIndexSV,
       renderTabBar,
       renderScene,
+      renderHeader,
       onIndexChange,
       onSwipeEnd,
       onSwipeStart,
@@ -309,9 +304,7 @@ export const TabView = React.memo(
         <InternalContextProvider value={internalContextValue}>
           <TabLayoutContextProvider>
             <ScrollableContextProvider>
-              <TabViewWithoutProviders
-                TabViewHeaderComponent={TabViewHeaderComponent}
-              />
+              <TabViewWithoutProviders />
             </ScrollableContextProvider>
           </TabLayoutContextProvider>
         </InternalContextProvider>

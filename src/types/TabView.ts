@@ -1,7 +1,12 @@
 import type { ViewProps } from 'react-native';
 import type { ViewStyle } from 'react-native';
 import type { StyleProp } from 'react-native';
-import type { Layout, NavigationState, SceneRendererProps } from './common';
+import type {
+  HeaderRendererProps,
+  Layout,
+  NavigationState,
+  SceneRendererProps,
+} from './common';
 import type { TabBarProps } from './TabBar';
 import type { SharedValue } from 'react-native-reanimated';
 
@@ -43,7 +48,7 @@ export type TabViewProps = Omit<ViewProps, 'children'> & {
   keyboardDismissMode?: KeyboardDismissMode;
   swipeEnabled?: boolean;
   renderMode?: RenderMode;
-  TabViewHeaderComponent?: React.ReactNode;
+  renderHeader?: (props: HeaderRendererProps) => React.ReactNode;
   onSwipeStart?: () => void;
   onSwipeEnd?: () => void;
 };

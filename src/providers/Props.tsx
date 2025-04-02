@@ -6,7 +6,11 @@ import type {
   KeyboardDismissMode,
   JumpMode,
 } from '../types/TabView';
-import type { NavigationState, SceneRendererProps } from '../types/common';
+import type {
+  HeaderRendererProps,
+  NavigationState,
+  SceneRendererProps,
+} from '../types/common';
 import type { ViewStyle } from 'react-native';
 import type { StyleProp } from 'react-native';
 import { noop } from '../constants/common';
@@ -33,6 +37,7 @@ type PropsContext = {
   providedAnimatedRouteIndexSV?: SharedValue<number>;
   renderTabBar?: (props: TabBarProps) => React.ReactNode;
   renderScene: (props: SceneRendererProps) => React.ReactNode;
+  renderHeader?: (props: HeaderRendererProps) => React.ReactNode;
   onIndexChange?: (index: number) => void;
   onSwipeEnd?: () => void;
   onSwipeStart?: () => void;
@@ -60,6 +65,7 @@ const PropsContext = createContext<PropsContext>({
   renderTabBar: undefined,
   providedAnimatedRouteIndexSV: undefined,
   renderScene: noop,
+  renderHeader: undefined,
   onSwipeEnd: undefined,
   onSwipeStart: undefined,
   onIndexChange: undefined,
