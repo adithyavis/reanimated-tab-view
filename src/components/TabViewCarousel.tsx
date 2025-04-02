@@ -20,6 +20,7 @@ import {
 } from '../providers/Carousel';
 import { Scene } from './Scene';
 import { SceneRendererContextProvider } from '../providers/SceneRenderer';
+import type { LayoutChangeEvent } from 'react-native';
 
 export type CarouselImperativeHandle = {
   jumpToRoute: (route: string) => void;
@@ -37,8 +38,12 @@ const TabViewCarouselWithoutProviders = React.memo(
       onSwipeEnd,
     } = usePropsContext();
 
-    const { initialRouteIndex, currentRouteIndex, setCurrentRouteIndex } =
-      useInternalContext();
+    const {
+      initialRouteIndex,
+      currentRouteIndex,
+      setCurrentRouteIndex,
+      setTabViewCarouselLayout,
+    } = useInternalContext();
 
     const { translationPerSceneContainer } = useCarouselContext();
     //#endregion
@@ -69,6 +74,18 @@ const TabViewCarouselWithoutProviders = React.memo(
       },
       [currentRouteIndex, setCurrentRouteIndex, keyboardDismissMode]
     );
+
+    const onTabViewCarouselLayout = useCallback(
+      ({ nativeEvent }: LayoutChangeEvent) => {
+        const { width, height } = nativeEvent.layout;
+        setTabViewCarouselLayout((prevLayout) => ({
+          ...prevLayout,
+          width,
+          height,
+        }));
+      },
+      [setTabViewCarouselLayout]
+    );
     //#endregion
 
     //#region hooks
@@ -98,7 +115,7 @@ const TabViewCarouselWithoutProviders = React.memo(
     //#region render
     return (
       <GestureDetector gesture={swipePanGesture}>
-        <View style={[styles.container]}>
+        <View style={[styles.container]} onLayout={onTabViewCarouselLayout}>
           {navigationState.routes.map((route, index) => {
             const shouldRender = computeShouldRenderRoute(index);
             const renderOffset = index * translationPerSceneContainer;

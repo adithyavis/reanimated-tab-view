@@ -37,7 +37,7 @@ export const RTVScrollView = React.memo(
     //#region context
     const { animatedTranslateYSV } = useScrollableContext();
 
-    const { tabViewHeaderLayout } = useInternalContext();
+    const { tabViewHeaderLayout, tabViewCarouselLayout } = useInternalContext();
 
     //#endregion
 
@@ -55,11 +55,17 @@ export const RTVScrollView = React.memo(
     //#endregion
 
     //#region styles
-    const animatedStyle = useAnimatedStyle(() => {
+    const animatedContentContainerStyle = useAnimatedStyle(() => {
       return {
         transform: [{ translateY: animatedTranslateYSV.value }],
+        paddingBottom: tabViewHeaderLayout.height,
+        minHeight: tabViewCarouselLayout.height + tabViewHeaderLayout.height,
       };
-    }, [animatedTranslateYSV]);
+    }, [
+      animatedTranslateYSV,
+      tabViewCarouselLayout.height,
+      tabViewHeaderLayout.height,
+    ]);
     //#endregion
 
     //#region callbacks
@@ -110,22 +116,6 @@ export const RTVScrollView = React.memo(
     useSyncScrollWithPanTranslation(scrollRef, scrollYSV);
     //#endregion
 
-    //#region render hooks
-    const contentContainer = useMemo(() => {
-      return (
-        <Animated.View
-          style={[
-            styles.contentContainer,
-            { paddingBottom: tabViewHeaderLayout.height },
-            animatedStyle,
-          ]}
-        >
-          {children}
-        </Animated.View>
-      );
-    }, [children, animatedStyle, tabViewHeaderLayout.height]);
-    //#endregion
-
     //#region render
     return (
       <GestureDetector gesture={scrollGesture}>
@@ -135,7 +125,11 @@ export const RTVScrollView = React.memo(
           onScroll={handleScroll}
           scrollEventThrottle={16}
         >
-          {contentContainer}
+          <Animated.View
+            style={[styles.contentContainer, animatedContentContainerStyle]}
+          >
+            {children}
+          </Animated.View>
         </Animated.ScrollView>
       </GestureDetector>
     );

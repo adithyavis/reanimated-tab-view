@@ -22,7 +22,7 @@ import {
   useInternalContext,
 } from '../providers/Internal';
 import { PropsContextProvider, usePropsContext } from '../providers/Props';
-import { SCROLLABLE_TAB_WIDTH } from '../constants/tabBar';
+import { SCROLLABLE_TAB_WIDTH, TAB_BAR_HEIGHT } from '../constants/tabBar';
 import useHandleIndexChange from '../hooks/useHandlerIndexChange';
 import { TabViewHeader } from './TabViewHeader';
 import { ScrollableContextProvider } from '../providers/Scrollable';
@@ -163,6 +163,16 @@ export const TabView = React.memo(
       ...initialLayout?.tabView,
     });
 
+    const [tabBarLayout, setTabBarLayout] = useState<Layout>({
+      width: tabViewLayout.width,
+      height: TAB_BAR_HEIGHT,
+    });
+
+    const [tabViewCarouselLayout, setTabViewCarouselLayout] = useState<Layout>({
+      width: tabViewLayout.width,
+      height: tabViewLayout.height - tabBarLayout.height,
+    });
+
     const [tabViewHeaderLayout, setTabViewHeaderLayout] = useState<Layout>({
       width: initialLayout?.tabView?.width ?? 0,
       height: 0,
@@ -259,6 +269,8 @@ export const TabView = React.memo(
       return {
         tabViewLayout,
         tabViewHeaderLayout,
+        tabBarLayout,
+        tabViewCarouselLayout,
         tabViewCarouselRef,
         routes,
         noOfRoutes,
@@ -269,10 +281,14 @@ export const TabView = React.memo(
         jumpTo,
         setTabViewLayout,
         setTabViewHeaderLayout,
+        setTabBarLayout,
+        setTabViewCarouselLayout,
       };
     }, [
       tabViewLayout,
       tabViewHeaderLayout,
+      tabBarLayout,
+      tabViewCarouselLayout,
       tabViewCarouselRef,
       routes,
       noOfRoutes,
@@ -283,6 +299,8 @@ export const TabView = React.memo(
       jumpTo,
       setTabViewLayout,
       setTabViewHeaderLayout,
+      setTabBarLayout,
+      setTabViewCarouselLayout,
     ]);
     //#endregion
 

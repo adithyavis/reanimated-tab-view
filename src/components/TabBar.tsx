@@ -1,8 +1,8 @@
 import { View } from 'react-native';
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useMemo, useRef } from 'react';
 import { FlatList } from 'react-native-gesture-handler';
 import type { TabBarProps } from '../types/TabBar';
-import type { Layout, Route } from '../types/common';
+import type { Route } from '../types/common';
 import { TabContent } from './TabContent';
 import { StyleSheet } from 'react-native';
 import { useTabBarAutoScroll } from '../hooks/useTabBarAutoScroll';
@@ -14,11 +14,6 @@ import { useInternalContext } from '../providers/Internal';
 import type { LayoutChangeEvent } from 'react-native';
 import TabContentContainer from './TabContentContainer';
 import { useTabLayoutContext } from '../providers/TabLayout';
-
-const INITIAL_TAB_BAR_LAYOUT: Layout = {
-  width: 0,
-  height: 0,
-};
 
 export const TabBar = React.memo((props: TabBarProps) => {
   //#region props
@@ -46,8 +41,13 @@ export const TabBar = React.memo((props: TabBarProps) => {
     scrollableTabWidth,
   } = usePropsContext();
 
-  const { currentRouteIndex, routes, tabViewLayout, noOfRoutes } =
-    useInternalContext();
+  const {
+    currentRouteIndex,
+    routes,
+    tabBarLayout,
+    setTabBarLayout,
+    noOfRoutes,
+  } = useInternalContext();
 
   const { routeIndexToTabContentWidthMap } = useTabLayoutContext();
   //#endregion
@@ -56,11 +56,6 @@ export const TabBar = React.memo((props: TabBarProps) => {
   const flatListRef = useRef<FlatList>(null);
 
   const data: Route[] = routes;
-
-  const [tabBarLayout, setTabBarLayout] = useState<Layout>({
-    ...INITIAL_TAB_BAR_LAYOUT,
-    ...{ width: tabViewLayout.width, height: TAB_BAR_HEIGHT },
-  });
   //#endregion
 
   //#region callbacks
