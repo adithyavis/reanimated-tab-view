@@ -21,6 +21,10 @@ reanimated-tab-view provides the following features that are provided by react-n
 
 Additionally, reanimated-tab-view also provides the following features
 
+- Collapsible headers
+
+  <img src="./assets/collapsible_header.gif" width="360">
+
 - 3 render modes to render the tab view ("all", "windowed" and "lazy"). Can be modified using the `renderMode` prop.
 
   - All render mode renders all the scenes in one go, during the initial tab view mount. When the number of scenes is large, it is recommended to use the window mode/lazy mode. This is the default render mode.
@@ -48,7 +52,6 @@ Additionally, reanimated-tab-view also provides the following features
 >
 > - Accessibility
 > - RTL support
-> - TabView collapsible Headers
 
 ## Motivation
 
@@ -63,6 +66,8 @@ Additionally, reanimated-tab-view also provides the following features
 reanimated-tab-view depends purely on react-native-reanimated, and as such, the above issues won't be encountered.
 
 2.  The swipe and jump-to behaviors in reanimated-tab-view are more controllable. Our implementation of the swipe and jump-to behaviors are built from scratch using the animation and gesture primitives offered by react-native-reanimated and react-native-gesture-handler.
+
+3.  We can't have collapsible headers in the original react-native-tab-view.
 
 ## Installation
 
@@ -125,24 +130,25 @@ export default function TabViewExample() {
 
 ## Props
 
-| Name                   | Description                                                                                    | Required | Type                                                              | Default   |
-| ---------------------- | ---------------------------------------------------------------------------------------------- | -------- | ----------------------------------------------------------------- | --------- |
-| navigationState        | The state of the navigation including the index and routes.                                    | Yes      | `{index: number; routes: Route;}`                                 |           |
-| initialLayout          | The initial layout of the tab view.                                                            | No       | `Partial<{width: number; height: number;}>`                       | undefined |
-| sceneContainerStyle    | The style for the scene container.                                                             | No       | `StyleProp<Animated.AnimateStyle<StyleProp<ViewStyle>>>`          | undefined |
-| sceneContainerGap      | The gap between each scene.                                                                    | No       | Number                                                            | 0         |
-| keyboardDismissMode    | Specifies how to dismiss the keyboard.                                                         | No       | `'auto'\|'on-drag'\|'none'`                                       | 'auto'    |
-| animatedRouteIndex     | A callback equivalent. Pass a shared value and its value gets updated when tab view is swipeds | No       | `SharedValue<number>`                                             | undefined |
-| swipeEnabled           | Enables or disables swipe gestures.                                                            | No       | Boolean                                                           | true      |
-| sceneContainerGap      | The gap between each scene.                                                                    | No       | Number                                                            | 0         |
-| renderMode             | Specifies the layout mode of the tab view.                                                     | No       | `'windowed'\|'lazy'\|'all'`                                       | "all"     |
-| jumpMode               | Specifies the jump mode of the tab view.                                                       | No       | `'smooth'\|'scrolling'\|'no-animation'`                           | "smooth"  |
-| tabBarConfig           | Configuration for the tab bar.                                                                 | No       | `TabBarConfig`- For details, see below.                           | undefined |
-| TabViewHeaderComponent | A component to render as the tab view header.                                                  | No       | `React.ReactNode`                                                 | undefined |
-| renderScene            | A function that renders the scene for a given route.                                           | Yes      | `(props: SceneRendererProps & {route: Route}) => React.ReactNode` |           |
-| onIndexChange          | A function that is called when the index changes.                                              | Yes      | `(index:number) => void`                                          |           |
-| onSwipeEnd             | Callback function for when a swipe gesture ends.                                               | No       | Function                                                          | undefined |
-| onSwipeStart           | Callback function for when a swipe gesture starts.                                             | No       | Function                                                          | undefined |
+| Name                   | Description                                                                                                                                                       | Required | Type                                                     | Default   |
+| ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- | -------------------------------------------------------- | --------- |
+| navigationState        | The state of the navigation including the index and routes.                                                                                                       | Yes      | `{index: number; routes: Route;}`                        |           |
+| initialLayout          | The initial layout of the tab view.                                                                                                                               | No       | `Partial<{width: number; height: number;}>`              | undefined |
+| sceneContainerStyle    | The style for the scene container.                                                                                                                                | No       | `StyleProp<Animated.AnimateStyle<StyleProp<ViewStyle>>>` | undefined |
+| sceneContainerGap      | The gap between each scene.                                                                                                                                       | No       | Number                                                   | 0         |
+| keyboardDismissMode    | Specifies how to dismiss the keyboard.                                                                                                                            | No       | `'auto'\|'on-drag'\|'none'`                              | 'auto'    |
+| animatedRouteIndex     | A callback equivalent. Pass a shared value and its value gets updated when tab view is swipeds                                                                    | No       | `SharedValue<number>`                                    | undefined |
+| swipeEnabled           | Enables or disables swipe gestures.                                                                                                                               | No       | Boolean                                                  | true      |
+| sceneContainerGap      | The gap between each scene.                                                                                                                                       | No       | Number                                                   | 0         |
+| renderMode             | Specifies the layout mode of the tab view.                                                                                                                        | No       | `'windowed'\|'lazy'\|'all'`                              | "all"     |
+| jumpMode               | Specifies the jump mode of the tab view.                                                                                                                          | No       | `'smooth'\|'scrolling'\|'no-animation'`                  | "smooth"  |
+| tabBarConfig           | Configuration for the tab bar.                                                                                                                                    | No       | `TabBarConfig`- For details, see below.                  | undefined |
+| TabViewHeaderComponent | A component to render as the tab view header.                                                                                                                     | No       | `React.ReactNode`                                        | undefined |
+| renderScene            | A function that renders the scene for a given route. Use `RTVScrollView` or `RTVFlatList` in order to render collapsible headers through the `renderHeader` prop. | No       | `(props: HeaderRendererProps) => React.ReactNode`        |           |
+| renderHeader           | A function that renders the header for the tab view.                                                                                                              | No       | `(props: SceneRendererProps) => React.ReactNode`         | undefined |
+| onIndexChange          | A function that is called when the index changes.                                                                                                                 | Yes      | `(index:number) => void`                                 |           |
+| onSwipeEnd             | Callback function for when a swipe gesture ends.                                                                                                                  | No       | Function                                                 | undefined |
+| onSwipeStart           | Callback function for when a swipe gesture starts.                                                                                                                | No       | Function                                                 | undefined |
 
 tabBarConfig properties are as follows:
 
