@@ -22,7 +22,7 @@ The [example/](https://github.com/adithyavis/reanimated-tab-view/tree/main/examp
 
 ## Features
 
-You can also refer to https://adithyavis.github.io/reanimated-tab-view/docs/guides.
+You can also refer to https://adithyavis.github.io/reanimated-tab-view/docs/features.
 
 reanimated-tab-view provides the following features that are provided by react-native-tab-view
 

@@ -29,7 +29,7 @@ import { RTVFlatList } from 'reanimated-tab-view';
 ## Usage
 
 ```tsx
-const MyTab = () => (
+const ScrollableScene = () => (
   <RTVFlatList
     data={items}
     renderItem={({ item }) => <ItemCard item={item} />}
