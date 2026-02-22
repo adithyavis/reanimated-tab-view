@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="./assets/logo.svg" alt="Reanimated Tab View" width="80" />
+</p>
+
 # Reanimated Tab View
 
 <a href="./assets/instagram_demo.mp4"><img src="./assets/instagram_demo.gif" style="display: block; margin: 0 auto;"></a>

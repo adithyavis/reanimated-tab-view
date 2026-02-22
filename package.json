@@ -33,7 +33,10 @@
     "clean": "del-cli lib",
     "prepare": "bob build",
     "web-build": "yarn workspace reanimated-tab-view-example web-build",
-    "release": "release-it"
+    "release": "release-it",
+    "docs": "yarn workspace docs start",
+    "docs:build": "yarn workspace docs build",
+    "docs:version": "yarn workspace docs docusaurus docs:version"
   },
   "keywords": [
     "react-native",
@@ -93,7 +96,8 @@
     "react-native-reanimated": ">=3.0.0"
   },
   "workspaces": [
-    "example"
+    "example",
+    "docs"
   ],
   "packageManager": "yarn@3.6.1",
   "engines": {
@@ -112,6 +116,9 @@
     ]
   },
   "release-it": {
+    "hooks": {
+      "after:bump": "yarn docs:version ${latestVersion} && git add docs/versioned_docs docs/versioned_sidebars docs/versions.json"
+    },
     "git": {
       "commitMessage": "chore: release ${version}",
       "tagName": "v${version}"
