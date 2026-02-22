@@ -5,7 +5,7 @@ const sidebars = {
       type: 'category',
       label: 'Getting Started',
       collapsed: false,
-      items: ['installation', 'quick-start'],
+      items: ['installation', 'quick-start', 'motivation'],
     },
     {
       type: 'category',
