@@ -5,10 +5,25 @@
   overflow: hidden;
 }
 
-.buttons {
+.heroContainer {
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 4rem;
+}
+
+.heroText {
+  flex: 1;
+  text-align: left;
+}
+
+.heroAnimation {
+  flex-shrink: 0;
+}
+
+.buttons {
+  display: flex;
+  align-items: center;
 }
 
 .features {
@@ -16,4 +31,19 @@
   align-items: center;
   padding: 2rem 0;
   width: 100%;
+}
+
+@media (max-width: 768px) {
+  .heroContainer {
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .heroText {
+    text-align: center;
+  }
+
+  .buttons {
+    justify-content: center;
+  }
 }
