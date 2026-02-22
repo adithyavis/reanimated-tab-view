@@ -13,6 +13,6 @@ export const CustomView = ({ children, style, ...props }: CustomViewProps) => {
 
 const styles = StyleSheet.create({
   view: {
-    backgroundColor: 'rgb(64, 64, 64)',
+    backgroundColor: 'rgb(32, 32, 32)',
   },
 });

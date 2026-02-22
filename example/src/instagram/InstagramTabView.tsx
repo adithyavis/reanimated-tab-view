@@ -104,7 +104,7 @@ export const InstagramTabView = () => {
 
 const styles = StyleSheet.create({
   tabBar: {
-    backgroundColor: 'rgb(64,64,64)',
+    backgroundColor: 'rgb(32, 32, 32)',
     height: TAB_BAR_HEIGHT,
     borderTopWidth: 1,
     borderBottomWidth: 1,
@@ -118,6 +118,6 @@ const styles = StyleSheet.create({
     borderRadius: 1,
   },
   tabViewCarousel: {
-    backgroundColor: 'rgb(64,64,64)',
+    backgroundColor: 'rgb(32, 32, 32)',
   },
 });
