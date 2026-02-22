@@ -30,20 +30,20 @@ export const useScrollHandlers = ({
   const { animatedTranslateYSV, translateYBounds, gestureSourceSV } =
     useHeaderContext();
 
-  const { isRouteFocused, scrollYSV } = useSceneRendererContext();
+  const { isRouteFocusedSV, scrollYSV } = useSceneRendererContext();
 
   const onBeginDrag = useWorkletCallback(() => {
-    if (!isRouteFocused) {
+    if (!isRouteFocusedSV.value) {
       return;
     }
     cancelAnimation(animatedTranslateYSV);
     gestureSourceSV.value = GestureSource.SCROLL;
-  }, [animatedTranslateYSV, gestureSourceSV, isRouteFocused]);
+  }, [animatedTranslateYSV, gestureSourceSV, isRouteFocusedSV]);
 
   const onScroll = useWorkletCallback(
     (event: NativeScrollEvent) => {
       scrollYSV.value = event.contentOffset.y;
-      if (!isRouteFocused) {
+      if (!isRouteFocusedSV.value) {
         return;
       }
       if (gestureSourceSV.value === GestureSource.SCROLL) {
@@ -53,7 +53,7 @@ export const useScrollHandlers = ({
         );
       }
     },
-    [animatedTranslateYSV, gestureSourceSV, translateYBounds, isRouteFocused]
+    [animatedTranslateYSV, gestureSourceSV, translateYBounds, isRouteFocusedSV]
   );
 
   const handleScroll = useAnimatedScrollHandler({

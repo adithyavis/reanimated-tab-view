@@ -1,44 +1,43 @@
 import React, { createContext, useContext, useMemo } from 'react';
-import { useSharedValue, type SharedValue } from 'react-native-reanimated';
+import {
+  useDerivedValue,
+  useSharedValue,
+  type SharedValue,
+} from 'react-native-reanimated';
 import { useInternalContext } from '../providers/Internal';
-import type { Route } from '../types';
 
 type SceneRendererContext = {
-  route: Route;
-  isRouteFocused: boolean;
+  isRouteFocusedSV: SharedValue<boolean>;
   scrollYSV: SharedValue<number>;
 };
 
 const SceneRendererContext = createContext<SceneRendererContext>({
-  route: { key: '', title: '' },
-  isRouteFocused: false,
-  scrollYSV: { value: 0 },
+  isRouteFocusedSV: { value: false } as SharedValue<boolean>,
+  scrollYSV: { value: 0 } as SharedValue<number>,
 });
 
 type SceneRendererContextProviderProps = {
-  route: Route;
   index: number;
   children: React.ReactNode;
 };
 
 export const SceneRendererContextProvider =
   React.memo<SceneRendererContextProviderProps>(
-    function SceneRendererContextProvider({ route, index, children }) {
-      const { currentRouteIndex } = useInternalContext();
+    function SceneRendererContextProvider({ index, children }) {
+      const { animatedRouteIndex } = useInternalContext();
 
-      const isRouteFocused = useMemo(() => {
-        return index === currentRouteIndex;
-      }, [index, currentRouteIndex]);
+      const isRouteFocusedSV = useDerivedValue(() => {
+        return animatedRouteIndex.value === index;
+      }, [index]);
 
       const scrollYSV = useSharedValue(0);
 
       const value = useMemo(
         () => ({
-          route,
-          isRouteFocused,
+          isRouteFocusedSV,
           scrollYSV,
         }),
-        [route, isRouteFocused, scrollYSV]
+        [isRouteFocusedSV, scrollYSV]
       );
 
       return (

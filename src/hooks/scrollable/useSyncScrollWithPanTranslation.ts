@@ -10,14 +10,14 @@ export const useSyncScrollWithPanTranslation = (
 ) => {
   const { animatedTranslateYSV, gestureSourceSV, translateYBounds } =
     useHeaderContext();
-  const { isRouteFocused, scrollYSV } = useSceneRendererContext();
+  const { isRouteFocusedSV, scrollYSV } = useSceneRendererContext();
 
   useAnimatedReaction(
     () => animatedTranslateYSV.value,
     (animatedTranslateY) => {
       const scrollToY = animatedTranslateY;
       if (
-        !isRouteFocused &&
+        !isRouteFocusedSV.value &&
         (scrollToY < translateYBounds.upper ||
           (scrollToY === translateYBounds.upper &&
             scrollYSV.value <= translateYBounds.upper))
@@ -32,7 +32,7 @@ export const useSyncScrollWithPanTranslation = (
     [
       animatedTranslateYSV,
       gestureSourceSV,
-      isRouteFocused,
+      isRouteFocusedSV,
       scrollRef,
       scrollYSV,
       translateYBounds,
