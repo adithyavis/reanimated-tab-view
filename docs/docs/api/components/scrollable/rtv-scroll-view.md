@@ -26,7 +26,7 @@ import { RTVScrollView } from 'reanimated-tab-view';
 ## Usage
 
 ```tsx
-const MyTab = () => (
+const ScrollableScene = () => (
   <RTVScrollView contentContainerStyle={{ padding: 16 }}>
     <Text>Your scrollable content</Text>
   </RTVScrollView>

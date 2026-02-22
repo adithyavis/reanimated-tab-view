@@ -1,0 +1,171 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="393" height="852" viewBox="0 0 393 852">
+  <defs>
+    <style>
+      /* 9s cycle: 3s per tab. Within each tab phase:
+         0.0-0.8s hold, 0.8-1.2s collapse, 1.2-1.8s hold collapsed,
+         1.8-2.2s expand, 2.2-2.5s hold, 2.5-3.0s tab transition */
+
+      @keyframes headerScroll {
+        0%, 4.44%    { transform: translateY(0); }
+        6.77%, 10%  { transform: translateY(0); }
+        24.44%, 42.22% { transform: translateY(0); }
+        46.67%, 53.33% { transform: translateY(-100px); }
+        57.78%, 75.56% { transform: translateY(0); }
+        80%, 86.67%  { transform: translateY(0); }
+        91.11%, 100% { transform: translateY(0); }
+      }
+
+      @keyframes scenesSlide {
+        0%, 27.78%     { transform: translateX(0); }
+        33.33%, 61.11% { transform: translateX(-357px); }
+        66.67%, 94.44% { transform: translateX(-714px); }
+        94.55%, 100%   { transform: translateX(0); }
+      }
+
+      @keyframes indicatorSlide {
+        0%, 27.78%     { transform: translateX(0); }
+        33.33%, 61.11% { transform: translateX(119px); }
+        66.67%, 94.44% { transform: translateX(238px); }
+        94.55%, 100%   { transform: translateX(0); }
+      }
+
+      @keyframes tab1text {
+        0%, 27.78%     { fill: white; }
+        33.33%, 94.44% { fill: rgba(255,255,255,0.4); }
+        94.55%, 100%   { fill: white; }
+      }
+      @keyframes tab2text {
+        0%, 27.78%     { fill: rgba(255,255,255,0.4); }
+        33.33%, 61.11% { fill: white; }
+        66.67%, 100%   { fill: rgba(255,255,255,0.4); }
+      }
+      @keyframes tab3text {
+        0%, 61.11%     { fill: rgba(255,255,255,0.4); }
+        66.67%, 94.44% { fill: white; }
+        94.55%, 100%   { fill: rgba(255,255,255,0.4); }
+      }
+
+      .scrollable   { animation: headerScroll 6s ease-in-out infinite; }
+      .scenes-strip { animation: scenesSlide 6s ease-in-out infinite; }
+      .indicator    { animation: indicatorSlide 6s ease-in-out infinite; }
+      .tab1-text    { animation: tab1text 6s ease-in-out infinite; }
+      .tab2-text    { animation: tab2text 6s ease-in-out infinite; }
+      .tab3-text    { animation: tab3text 6s ease-in-out infinite; }
+    </style>
+    <clipPath id="screen">
+      <rect x="18" y="18" width="357" height="816" rx="40"/>
+    </clipPath>
+  </defs>
+
+  <!-- Phone frame -->
+  <rect x="2" y="2" width="389" height="848" rx="50" fill="#1a1a2e" stroke="#2d2d44" stroke-width="2"/>
+  <rect x="10" y="10" width="373" height="832" rx="44" fill="#0f0f1a"/>
+
+  <!-- Screen area (clipped) -->
+  <g clip-path="url(#screen)">
+
+    <!-- Scrollable area (header + tab bar + content) -->
+    <g class="scrollable">
+
+      <!-- Collapsible header (y=68, h=100) -->
+      <rect x="18" y="68" width="357" height="100" fill="#5000d0"/>
+      <circle cx="68" cy="118" r="28" fill="white" opacity="0.2"/>
+      <rect x="108" y="100" width="130" height="13" rx="6" fill="white" opacity="0.35"/>
+      <rect x="108" y="122" width="210" height="9" rx="4" fill="white" opacity="0.18"/>
+      <rect x="108" y="140" width="160" height="9" rx="4" fill="white" opacity="0.18"/>
+
+      <!-- Tab bar (y=168, h=50) -->
+      <rect x="18" y="168" width="357" height="50" fill="#6200ee"/>
+
+      <!-- Tab indicator (slides smoothly) -->
+      <g class="indicator">
+        <rect x="24" y="172" width="109" height="42" rx="10" fill="white" opacity="0.2"/>
+      </g>
+
+      <!-- Tab labels -->
+      <text class="tab1-text" x="78" y="199" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="600" fill="white">Home</text>
+      <text class="tab2-text" x="197" y="199" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="600" fill="rgba(255,255,255,0.4)">Explore</text>
+      <text class="tab3-text" x="316" y="199" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="600" fill="rgba(255,255,255,0.4)">Profile</text>
+
+      <!-- Scenes strip (scrolls left/right for tab changes) -->
+      <g class="scenes-strip">
+
+        <!-- Scene 1: Home (x=18) -->
+        <rect x="18" y="218" width="357" height="716" fill="#7c4dff"/>
+        <rect x="38" y="238" width="313" height="130" rx="18" fill="white" opacity="0.15"/>
+        <rect x="54" y="254" width="56" height="56" rx="14" fill="white" opacity="0.25"/>
+        <rect x="126" y="258" width="120" height="11" rx="5" fill="white" opacity="0.3"/>
+        <rect x="126" y="280" width="180" height="9" rx="4" fill="white" opacity="0.15"/>
+        <rect x="126" y="298" width="100" height="9" rx="4" fill="white" opacity="0.15"/>
+        <rect x="54" y="330" width="280" height="18" rx="9" fill="white" opacity="0.1"/>
+        <rect x="38" y="388" width="313" height="64" rx="14" fill="white" opacity="0.12"/>
+        <rect x="54" y="406" width="36" height="36" rx="18" fill="white" opacity="0.2"/>
+        <rect x="106" y="412" width="140" height="9" rx="4" fill="white" opacity="0.25"/>
+        <rect x="106" y="430" width="90" height="7" rx="3" fill="white" opacity="0.12"/>
+        <rect x="38" y="466" width="313" height="64" rx="14" fill="white" opacity="0.12"/>
+        <rect x="54" y="484" width="36" height="36" rx="18" fill="white" opacity="0.2"/>
+        <rect x="106" y="490" width="170" height="9" rx="4" fill="white" opacity="0.25"/>
+        <rect x="106" y="508" width="70" height="7" rx="3" fill="white" opacity="0.12"/>
+        <rect x="38" y="544" width="313" height="64" rx="14" fill="white" opacity="0.12"/>
+        <rect x="54" y="562" width="36" height="36" rx="18" fill="white" opacity="0.2"/>
+        <rect x="106" y="568" width="120" height="9" rx="4" fill="white" opacity="0.25"/>
+        <rect x="106" y="586" width="100" height="7" rx="3" fill="white" opacity="0.12"/>
+        <rect x="38" y="622" width="313" height="64" rx="14" fill="white" opacity="0.12"/>
+        <rect x="54" y="640" width="36" height="36" rx="18" fill="white" opacity="0.2"/>
+        <rect x="106" y="646" width="150" height="9" rx="4" fill="white" opacity="0.25"/>
+        <rect x="106" y="664" width="80" height="7" rx="3" fill="white" opacity="0.12"/>
+
+        <!-- Scene 2: Explore (x=375) -->
+        <rect x="375" y="218" width="357" height="716" fill="#448aff"/>
+        <rect x="395" y="238" width="148" height="170" rx="18" fill="white" opacity="0.15"/>
+        <rect x="411" y="254" width="116" height="100" rx="14" fill="white" opacity="0.2"/>
+        <rect x="411" y="368" width="88" height="9" rx="4" fill="white" opacity="0.25"/>
+        <rect x="411" y="386" width="60" height="7" rx="3" fill="white" opacity="0.12"/>
+        <rect x="560" y="238" width="148" height="170" rx="18" fill="white" opacity="0.15"/>
+        <rect x="576" y="254" width="116" height="100" rx="14" fill="white" opacity="0.2"/>
+        <rect x="576" y="368" width="72" height="9" rx="4" fill="white" opacity="0.25"/>
+        <rect x="576" y="386" width="96" height="7" rx="3" fill="white" opacity="0.12"/>
+        <rect x="395" y="426" width="148" height="170" rx="18" fill="white" opacity="0.15"/>
+        <rect x="411" y="442" width="116" height="100" rx="14" fill="white" opacity="0.2"/>
+        <rect x="411" y="556" width="76" height="9" rx="4" fill="white" opacity="0.25"/>
+        <rect x="411" y="574" width="50" height="7" rx="3" fill="white" opacity="0.12"/>
+        <rect x="560" y="426" width="148" height="170" rx="18" fill="white" opacity="0.15"/>
+        <rect x="576" y="442" width="116" height="100" rx="14" fill="white" opacity="0.2"/>
+        <rect x="576" y="556" width="92" height="9" rx="4" fill="white" opacity="0.25"/>
+        <rect x="576" y="574" width="64" height="7" rx="3" fill="white" opacity="0.12"/>
+
+        <!-- Scene 3: Profile (x=732) -->
+        <rect x="732" y="218" width="357" height="716" fill="#00bfa5"/>
+        <rect x="752" y="238" width="313" height="220" rx="18" fill="white" opacity="0.15"/>
+        <rect x="768" y="254" width="281" height="130" rx="14" fill="white" opacity="0.2"/>
+        <rect x="768" y="400" width="170" height="11" rx="5" fill="white" opacity="0.3"/>
+        <rect x="768" y="422" width="250" height="9" rx="4" fill="white" opacity="0.15"/>
+        <rect x="752" y="478" width="96" height="88" rx="16" fill="white" opacity="0.12"/>
+        <rect x="768" y="496" width="64" height="16" rx="8" fill="white" opacity="0.25"/>
+        <rect x="768" y="524" width="48" height="7" rx="3" fill="white" opacity="0.12"/>
+        <rect x="862" y="478" width="96" height="88" rx="16" fill="white" opacity="0.12"/>
+        <rect x="878" y="496" width="64" height="16" rx="8" fill="white" opacity="0.25"/>
+        <rect x="878" y="524" width="44" height="7" rx="3" fill="white" opacity="0.12"/>
+        <rect x="972" y="478" width="96" height="88" rx="16" fill="white" opacity="0.12"/>
+        <rect x="988" y="496" width="64" height="16" rx="8" fill="white" opacity="0.25"/>
+        <rect x="988" y="524" width="52" height="7" rx="3" fill="white" opacity="0.12"/>
+        <rect x="752" y="586" width="313" height="56" rx="28" fill="white" opacity="0.2"/>
+        <rect x="861" y="604" width="100" height="11" rx="5" fill="white" opacity="0.35"/>
+
+      </g>
+    </g>
+
+    <!-- Status bar (on top to cover header during collapse) -->
+    <rect x="18" y="18" width="357" height="50" fill="#1a1a2e"/>
+    <text x="196" y="49" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="15" font-weight="600" fill="white">9:41</text>
+    <rect x="318" y="36" width="22" height="11" rx="3" fill="white" opacity="0.7"/>
+    <rect x="342" y="39" width="3" height="5" rx="1" fill="white" opacity="0.4"/>
+
+    <!-- Dynamic Island -->
+    <rect x="148" y="24" width="97" height="28" rx="14" fill="black"/>
+
+  </g>
+
+  <!-- Home indicator -->
+  <rect x="147" y="818" width="100" height="5" rx="2.5" fill="white" opacity="0.2"/>
+</svg>

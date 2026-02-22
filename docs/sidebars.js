@@ -9,13 +9,20 @@ const sidebars = {
     },
     {
       type: 'category',
-      label: 'Guides',
+      label: 'Features',
       collapsed: false,
       items: [
         'guides/render-modes',
         'guides/jump-modes',
-        'guides/dynamic-tab-widths',
-        'guides/custom-tab-bar',
+        {
+          type: 'category',
+          label: 'Tab Bar',
+          collapsed: false,
+          items: [
+            'guides/custom-tab-bar',
+            'guides/dynamic-tab-widths',
+          ],
+        },
         {
           type: 'category',
           label: 'Scrollable',

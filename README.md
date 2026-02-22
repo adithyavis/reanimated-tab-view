@@ -1,20 +1,28 @@
+# <img src="./assets/logo.svg" alt="Reanimated Tab View Logo" width="25" height="25" style="margin: 0 0 -3px 0;" /> Reanimated Tab View
+
 <p align="center">
-  <img src="./assets/logo.svg" alt="Reanimated Tab View" width="80" />
+  <img src="./assets/tab-view-animation.svg" alt="Reanimated Tab View" width="150" />
 </p>
-
-# Reanimated Tab View
-
-<a href="./assets/instagram_demo.mp4"><img src="./assets/instagram_demo.gif" style="display: block; margin: 0 auto;"></a>
 
 A custom Tab View component implemented using [`react-native-reanimated`](https://github.com/software-mansion/react-native-reanimated/) and [`react-native-gesture-handler`](https://github.com/software-mansion/react-native-gesture-handler/). Props are almost entirely inter-compatible with [`react-native-tab-view`](https://github.com/satya164/react-native-tab-view)
 
-- The [example/](https://github.com/adithyavis/reanimated-tab-view/tree/main/example) folder contains reference code to use the library.
+For more: https://adithyavis.github.io/reanimated-tab-view/
 
 ## Demo
 
-<a href="./assets/assets_demo.mp4"><img src="./assets/assets_demo.gif" width="360" style="display: block; margin: 0 auto;"></a>
+<div align="center">
+
+| Instagram                                                                                                                               | Basic                                                                                                                           |
+| --------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| <a href="./assets/instagram_demo.mp4"><img src="./assets/instagram_demo_2.gif" width="200" style="display: block; margin: 0 auto;"></a> | <a href="./assets/assets_demo.mp4"><img src="./assets/assets_demo.gif" width="200" style="display: block; margin: 0 auto;"></a> |
+
+</div>
+
+The [example/](https://github.com/adithyavis/reanimated-tab-view/tree/main/example) folder contains reference code for these examples and also is a good place to learn how to use the library.
 
 ## Features
+
+You can also refer to https://adithyavis.github.io/reanimated-tab-view/docs/features.
 
 reanimated-tab-view provides the following features that are provided by react-native-tab-view
 
