@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useMemo } from 'react';
+import React, { createContext, useContext, useEffect, useMemo } from 'react';
 import { useSharedValue, type SharedValue } from 'react-native-reanimated';
 import { useInternalContext } from './Internal';
 import { GestureSource } from '../constants/scrollable';
@@ -6,13 +6,13 @@ import { GestureSource } from '../constants/scrollable';
 type HeaderContext = {
   animatedTranslateYSV: SharedValue<number>;
   gestureSourceSV: SharedValue<GestureSource>;
-  translateYBounds: { lower: number; upper: number };
+  translateYBoundsUpperSV: SharedValue<number>;
 };
 
 const HeaderContext = createContext<HeaderContext>({
   animatedTranslateYSV: { value: 0 },
   gestureSourceSV: { value: GestureSource.SCROLL },
-  translateYBounds: { lower: 0, upper: 0 },
+  translateYBoundsUpperSV: { value: 0 },
 });
 
 type HeaderContextProviderProps = {
@@ -27,20 +27,18 @@ export const HeaderContextProvider = React.memo<HeaderContextProviderProps>(
 
     const { tabViewHeaderLayout } = useInternalContext();
 
-    const translateYBounds = useMemo(() => {
-      return {
-        lower: 0,
-        upper: tabViewHeaderLayout.height,
-      };
-    }, [tabViewHeaderLayout.height]);
+    const translateYBoundsUpperSV = useSharedValue(tabViewHeaderLayout.height);
+    useEffect(() => {
+      translateYBoundsUpperSV.value = tabViewHeaderLayout.height;
+    }, [tabViewHeaderLayout.height, translateYBoundsUpperSV]);
 
     const value = useMemo(
       () => ({
         animatedTranslateYSV,
-        translateYBounds,
+        translateYBoundsUpperSV,
         gestureSourceSV,
       }),
-      [animatedTranslateYSV, translateYBounds, gestureSourceSV]
+      [animatedTranslateYSV, translateYBoundsUpperSV, gestureSourceSV]
     );
 
     return (

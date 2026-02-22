@@ -45,12 +45,12 @@
         94.55%, 100%   { fill: rgba(255,255,255,0.4); }
       }
 
-      .scrollable   { animation: headerScroll 6s ease-in-out infinite; }
-      .scenes-strip { animation: scenesSlide 6s ease-in-out infinite; }
-      .indicator    { animation: indicatorSlide 6s ease-in-out infinite; }
-      .tab1-text    { animation: tab1text 6s ease-in-out infinite; }
-      .tab2-text    { animation: tab2text 6s ease-in-out infinite; }
-      .tab3-text    { animation: tab3text 6s ease-in-out infinite; }
+      .scrollable   { animation: headerScroll 3s ease-in-out infinite; }
+      .scenes-strip { animation: scenesSlide 3s ease-in-out infinite; }
+      .indicator    { animation: indicatorSlide 3s ease-in-out infinite; }
+      .tab1-text    { animation: tab1text 3s ease-in-out infinite; }
+      .tab2-text    { animation: tab2text 3s ease-in-out infinite; }
+      .tab3-text    { animation: tab3text 3s ease-in-out infinite; }
     </style>
     <clipPath id="screen">
       <rect x="18" y="18" width="357" height="816" rx="40"/>

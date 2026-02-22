@@ -143,7 +143,7 @@ const TabViewCarouselWithoutProviders = React.memo(
                       }
                       onMount={() => handleSceneMount(index)}
                     >
-                      <SceneRendererContextProvider route={route} index={index}>
+                      <SceneRendererContextProvider index={index}>
                         <Scene renderScene={renderScene} route={route} />
                       </SceneRendererContextProvider>
                     </LazyLoader>
