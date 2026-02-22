@@ -7,11 +7,11 @@ import { useHeaderContext } from '../providers/Header';
 import { usePropsContext } from '../providers/Props';
 
 export const TabViewHeader = React.memo<TabViewHeaderProps>(({ style }) => {
-  const { tabViewHeaderLayout, setTabViewHeaderLayout } = useInternalContext();
+  const { setTabViewHeaderLayout } = useInternalContext();
 
   const { renderHeader } = usePropsContext();
 
-  const { animatedTranslateYSV } = useHeaderContext();
+  const { animatedTranslateYSV, translateYBoundsUpperSV } = useHeaderContext();
 
   const onTabViewHeaderLayout = useCallback(
     ({ nativeEvent }: LayoutChangeEvent) => {
@@ -26,22 +26,18 @@ export const TabViewHeader = React.memo<TabViewHeaderProps>(({ style }) => {
   );
 
   const collapsedPercentageSV = useDerivedValue(() => {
-    const tabViewHeaderHeight = tabViewHeaderLayout.height || 1;
-    if (tabViewHeaderHeight === 0) {
+    const translateYBoundsUpper = translateYBoundsUpperSV.value;
+    if (translateYBoundsUpper === 0) {
       return 0;
     }
-    return (animatedTranslateYSV.value / tabViewHeaderHeight) * 100;
-  });
-
-  const collapsedHeaderHeightSV = useDerivedValue(() => {
-    return animatedTranslateYSV.value;
+    return (animatedTranslateYSV.value / translateYBoundsUpper) * 100;
   });
 
   return (
     <Animated.View onLayout={onTabViewHeaderLayout} style={style}>
       {renderHeader?.({
         collapsedPercentage: collapsedPercentageSV,
-        collapsedHeaderHeight: collapsedHeaderHeightSV,
+        collapsedHeaderHeight: animatedTranslateYSV,
       })}
     </Animated.View>
   );

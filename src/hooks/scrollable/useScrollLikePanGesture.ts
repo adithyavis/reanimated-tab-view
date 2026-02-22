@@ -14,7 +14,7 @@ import { useHeaderContext } from '../../providers/Header';
 const ACTIVE_OFFSET_Y = [-10, 10];
 
 export const useScrollLikePanGesture = () => {
-  const { animatedTranslateYSV, gestureSourceSV, translateYBounds } =
+  const { animatedTranslateYSV, gestureSourceSV, translateYBoundsUpperSV } =
     useHeaderContext();
 
   const initialTranslateYSV = useSharedValue(0);
@@ -31,18 +31,15 @@ export const useScrollLikePanGesture = () => {
       })
       .onChange((event) => {
         animatedTranslateYSV.value = Math.min(
-          Math.max(
-            initialTranslateYSV.value - event.translationY,
-            translateYBounds.lower
-          ),
-          translateYBounds.upper
+          Math.max(initialTranslateYSV.value - event.translationY, 0),
+          translateYBoundsUpperSV.value
         );
       })
       .onEnd((event) => {
         animatedTranslateYSV.value = withDecay({
           velocity: -event.velocityY,
           deceleration: DECELERATION_RATE_FOR_SCROLLVIEW,
-          clamp: [translateYBounds.lower, translateYBounds.upper],
+          clamp: [0, translateYBoundsUpperSV.value],
         });
       });
 
@@ -51,7 +48,7 @@ export const useScrollLikePanGesture = () => {
     animatedTranslateYSV,
     gestureSourceSV,
     initialTranslateYSV,
-    translateYBounds,
+    translateYBoundsUpperSV,
   ]);
 
   return scrollLikePanGesture;

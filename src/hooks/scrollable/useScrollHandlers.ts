@@ -2,7 +2,6 @@ import {
   cancelAnimation,
   runOnJS,
   useAnimatedScrollHandler,
-  useWorkletCallback,
 } from 'react-native-reanimated';
 import type {
   NativeScrollEvent,
@@ -27,38 +26,22 @@ export const useScrollHandlers = ({
   | 'onMomentumScrollEnd'
   | 'onMomentumScrollBegin'
 >) => {
-  const { animatedTranslateYSV, translateYBounds, gestureSourceSV } =
+  const { animatedTranslateYSV, translateYBoundsUpperSV, gestureSourceSV } =
     useHeaderContext();
 
   const { isRouteFocusedSV, scrollYSV } = useSceneRendererContext();
 
-  const onBeginDrag = useWorkletCallback(() => {
-    if (!isRouteFocusedSV.value) {
-      return;
-    }
-    cancelAnimation(animatedTranslateYSV);
-    gestureSourceSV.value = GestureSource.SCROLL;
-  }, [animatedTranslateYSV, gestureSourceSV, isRouteFocusedSV]);
-
-  const onScroll = useWorkletCallback(
-    (event: NativeScrollEvent) => {
-      scrollYSV.value = event.contentOffset.y;
-      if (!isRouteFocusedSV.value) {
-        return;
-      }
-      if (gestureSourceSV.value === GestureSource.SCROLL) {
-        animatedTranslateYSV.value = Math.min(
-          Math.max(event.contentOffset.y, translateYBounds.lower),
-          translateYBounds.upper
-        );
-      }
-    },
-    [animatedTranslateYSV, gestureSourceSV, translateYBounds, isRouteFocusedSV]
-  );
-
   const handleScroll = useAnimatedScrollHandler({
     onScroll: (event) => {
-      onScroll(event);
+      scrollYSV.value = event.contentOffset.y;
+      if (isRouteFocusedSV.value) {
+        if (gestureSourceSV.value === GestureSource.SCROLL) {
+          animatedTranslateYSV.value = Math.min(
+            Math.max(event.contentOffset.y, 0),
+            translateYBoundsUpperSV.value
+          );
+        }
+      }
       if (_onScroll) {
         runOnJS(_onScroll)({
           nativeEvent: event,
@@ -66,7 +49,10 @@ export const useScrollHandlers = ({
       }
     },
     onBeginDrag: (event) => {
-      onBeginDrag();
+      if (isRouteFocusedSV.value) {
+        cancelAnimation(animatedTranslateYSV);
+        gestureSourceSV.value = GestureSource.SCROLL;
+      }
       if (_onScrollBeginDrag) {
         runOnJS(_onScrollBeginDrag)({
           nativeEvent: event,
