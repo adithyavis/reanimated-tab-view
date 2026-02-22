@@ -6,19 +6,35 @@
 
 A custom Tab View component implemented using [`react-native-reanimated`](https://github.com/software-mansion/react-native-reanimated/) and [`react-native-gesture-handler`](https://github.com/software-mansion/react-native-gesture-handler/). Props are almost entirely inter-compatible with [`react-native-tab-view`](https://github.com/satya164/react-native-tab-view)
 
-For more: https://adithyavis.github.io/reanimated-tab-view/
+For Docs → https://adithyavis.github.io/reanimated-tab-view/
 
 ## Demo
 
 <div align="center">
 
-| Instagram                                                                                                                               | Basic                                                                                                                           |
-| --------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| <a href="./assets/instagram_demo.mp4"><img src="./assets/instagram_demo_2.gif" width="200" style="display: block; margin: 0 auto;"></a> | <a href="./assets/assets_demo.mp4"><img src="./assets/assets_demo.gif" width="200" style="display: block; margin: 0 auto;"></a> |
+| Instagram                                                                                                                                                                              | Basic                                                                                                                                                                          |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| <div style="width: 200px; height: 430px"><a href="./assets/instagram_demo.mp4"><img src="./assets/instagram_demo_2.gif" width="200" style="display: block; margin: 0 auto;"></a></div> | <div style="width: 200px; height: 430px"><a href="./assets/assets_demo.mp4"><img src="./assets/assets_demo.gif" width="200" style="display: block; margin: 0 auto;"></a></div> |
 
 </div>
 
 The [example/](https://github.com/adithyavis/reanimated-tab-view/tree/main/example) folder contains reference code for these examples and also is a good place to learn how to use the library.
+
+## Motivation
+
+1.  The original react-native-tab-view is an amazing package, no doubt. However,
+    it is dependent on [`react-native-pager-view`](https://github.com/callstack/react-native-pager-view).
+    This dependency complicates solving issues such as
+
+- [`TabView tab index not really controlled`](https://github.com/react-navigation/react-navigation/issues/11412)
+- [`Tab label aligning vertically in some devices when render single tab.`](https://github.com/react-navigation/react-navigation/issues/11083)
+- [`Screen getting stuck when switching between the tabs while keyboard opened.`](https://github.com/react-navigation/react-navigation/issues/11301).
+
+reanimated-tab-view depends purely on react-native-reanimated, and as such, the above issues won't be encountered.
+
+2.  I wanted swipe and jump-to behaviors. My implementation of the swipe and jump-to behaviors are built from scratch using the animation and gesture primitives offered by react-native-reanimated and react-native-gesture-handler.
+
+3.  I wanted collapsible headers in the original react-native-tab-view, however they didn't provide support. Many real apps like Instagram, X, Reddit and LinkedIn have tab views in their apps that support collapsible headers. I consider it an anti-pattern for a tab view component to not have support for collapsible headers.
 
 ## Features
 
@@ -69,23 +85,9 @@ Additionally, reanimated-tab-view also provides the following features
 > - Accessibility
 > - RTL support
 
-## Motivation
-
-1.  The original react-native-tab-view is an amazing package, no doubt. However,
-    it is dependent on [`react-native-pager-view`](https://github.com/callstack/react-native-pager-view).
-    This dependency complicates solving issues such as
-
-- [`TabView tab index not really controlled`](https://github.com/react-navigation/react-navigation/issues/11412)
-- [`Tab label aligning vertically in some devices when render single tab.`](https://github.com/react-navigation/react-navigation/issues/11083)
-- [`Screen getting stuck when switching between the tabs while keyboard opened.`](https://github.com/react-navigation/react-navigation/issues/11301).
-
-reanimated-tab-view depends purely on react-native-reanimated, and as such, the above issues won't be encountered.
-
-2.  The swipe and jump-to behaviors in reanimated-tab-view are more controllable. Our implementation of the swipe and jump-to behaviors are built from scratch using the animation and gesture primitives offered by react-native-reanimated and react-native-gesture-handler.
-
-3.  We can't have collapsible headers in the original react-native-tab-view.
-
 ## Installation
+
+You can also refer to https://adithyavis.github.io/reanimated-tab-view/docs/installation.
 
 Install react-native-reanimated (>=2.x) and react-native-gesture-handler (>=2.x).
 
@@ -99,6 +101,8 @@ yarn add reanimated-tab-view
 ```
 
 ## Quick Start
+
+You can also refer to https://adithyavis.github.io/reanimated-tab-view/docs/quick-start.
 
 ```js
 import * as React from 'react';
@@ -144,7 +148,9 @@ export default function TabViewExample() {
 }
 ```
 
-## Props
+## API
+
+You can also refer to https://adithyavis.github.io/reanimated-tab-view/docs/api/components/tab-view.
 
 | Name                   | Description                                                                                                                                                       | Required | Type                                                                                                                                                                   | Default   |
 | ---------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- |
