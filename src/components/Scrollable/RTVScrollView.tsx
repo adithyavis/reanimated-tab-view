@@ -4,7 +4,6 @@ import Animated, {
   useAnimatedRef,
   useAnimatedStyle,
 } from 'react-native-reanimated';
-import { StyleSheet } from 'react-native';
 import type { ScrollView } from 'react-native';
 
 import { useHeaderContext } from '../../providers/Header';
@@ -89,21 +88,11 @@ export const RTVScrollViewWithoutScrollHandler = React.memo(
             scrollEventThrottle={16}
           >
             {SHOULD_RENDER_ABSOLUTE_HEADER ? (
-              <Animated.View
-                style={[
-                  styles.contentContainer,
-                  nonTranslatingContentContainerStyle,
-                ]}
-              >
+              <Animated.View style={[nonTranslatingContentContainerStyle]}>
                 {children}
               </Animated.View>
             ) : (
-              <Animated.View
-                style={[
-                  styles.contentContainer,
-                  translatingContentContainerStyle,
-                ]}
-              >
+              <Animated.View style={[translatingContentContainerStyle]}>
                 {children}
               </Animated.View>
             )}
@@ -157,9 +146,3 @@ export const RTVScrollView = React.memo(
     }
   )
 );
-
-const styles = StyleSheet.create({
-  contentContainer: {
-    flex: 1,
-  },
-});
