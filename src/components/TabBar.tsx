@@ -196,7 +196,7 @@ export const TabBar = React.memo((props: TabBarProps) => {
           style={[styles.tabBar, styles.nonScrollableTabBar]}
         >
           {routes.map((route, index) => (
-            <React.Fragment key={index}>
+            <React.Fragment key={route.key}>
               {renderItem({ item: route, index })}
             </React.Fragment>
           ))}
