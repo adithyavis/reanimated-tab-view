@@ -54,7 +54,7 @@ The `renderHeader` callback receives `HeaderRendererProps`:
 
 | Prop | Type | Description |
 |------|------|-------------|
-| `collapsedPercentage` | `SharedValue<number>` | Animated value from 0 (expanded) to 1 (fully collapsed) |
+| `collapsedPercentage` | `SharedValue<number>` | Animated value from 0 (expanded) to 100 (fully collapsed) |
 | `collapsedHeaderHeight` | `SharedValue<number>` | Animated value representing the current collapsed height |
 
 You can use these shared values to create animated header effects:
@@ -64,7 +64,7 @@ import Animated, { useAnimatedStyle, interpolate } from 'react-native-reanimated
 
 const renderHeader = ({ collapsedPercentage }) => {
   const animatedStyle = useAnimatedStyle(() => ({
-    opacity: interpolate(collapsedPercentage.value, [0, 1], [1, 0]),
+    opacity: interpolate(collapsedPercentage.value, [0, 100], [1, 0]),
   }));
 
   return (
