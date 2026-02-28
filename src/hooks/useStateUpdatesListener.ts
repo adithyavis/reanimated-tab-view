@@ -1,7 +1,11 @@
 import { useEffect, useRef } from 'react';
 
-export const useStateUpdatesListener = (state: any, callback: () => void) => {
-  const prevStateRef = useRef(null);
+export const useStateUpdatesListener = (
+  state: any,
+  callback: () => void,
+  listenToInitialStateUpdate = false
+) => {
+  const prevStateRef = useRef(listenToInitialStateUpdate ? null : state);
 
   useEffect(() => {
     if (state !== prevStateRef.current) {

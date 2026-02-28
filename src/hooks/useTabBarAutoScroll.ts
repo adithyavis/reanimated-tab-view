@@ -56,7 +56,8 @@ export const useTabBarAutoScroll = (
       setTimeout(() => {
         autoScrollToRouteIndex(currentRouteIndex);
       }, 500);
-    }, [autoScrollToRouteIndex, currentRouteIndex])
+    }, [autoScrollToRouteIndex, currentRouteIndex]),
+    true
   );
 
   const handleScrollToIndexFailed = useCallback(
