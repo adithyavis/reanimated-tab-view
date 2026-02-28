@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useMemo, useState } from 'react';
 import { useSharedValue, type SharedValue } from 'react-native-reanimated';
 import type {
   RouteIndexToTabContentWidthMap,
@@ -33,16 +33,25 @@ export const TabLayoutContextProvider: React.FC = React.memo(
     const routeIndexToTabOffsetMapSV = useSharedValue({});
     const routeIndexToTabContentWidthMapSV = useSharedValue({});
 
+    const value = useMemo(
+      () => ({
+        routeIndexToTabContentWidthMap,
+        setRouteIndexToTabContentWidthMap,
+        routeIndexToTabWidthMapSV,
+        routeIndexToTabOffsetMapSV,
+        routeIndexToTabContentWidthMapSV,
+      }),
+      [
+        routeIndexToTabContentWidthMap,
+        setRouteIndexToTabContentWidthMap,
+        routeIndexToTabWidthMapSV,
+        routeIndexToTabOffsetMapSV,
+        routeIndexToTabContentWidthMapSV,
+      ]
+    );
+
     return (
-      <TabLayoutContext.Provider
-        value={{
-          routeIndexToTabContentWidthMap,
-          setRouteIndexToTabContentWidthMap,
-          routeIndexToTabWidthMapSV,
-          routeIndexToTabOffsetMapSV,
-          routeIndexToTabContentWidthMapSV,
-        }}
-      >
+      <TabLayoutContext.Provider value={value}>
         {children}
       </TabLayoutContext.Provider>
     );
