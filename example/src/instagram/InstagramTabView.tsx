@@ -1,15 +1,17 @@
-import React, { useMemo, useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { Dimensions, StyleSheet } from 'react-native';
 import {
-  TabView,
   TabBar,
-  type TabBarProps,
+  TabView,
   type NavigationState,
   type TabBarConfig,
+  type TabBarProps,
+  type Route,
 } from 'reanimated-tab-view';
+import type { SharedValue } from 'react-native-reanimated';
 import { HEADER_HEIGHT, InstagramHeader } from './InstagramHeader';
-import { InstagramTabContent } from './InstagramTabContent';
 import { InstagramPhotoGrid } from './InstagramPhotosGrid';
+import { InstagramTabContent } from './InstagramTabContent';
 
 const { width: windowWidth } = Dimensions.get('window');
 const TAB_BAR_HEIGHT = 40;
@@ -56,7 +58,7 @@ export const InstagramTabView = () => {
     return <InstagramHeader />;
   }, []);
 
-  const renderTabContent = useCallback(({ activePercentage, route }) => {
+  const renderTabContent = useCallback(({ activePercentage, route }: { activePercentage: SharedValue<number>; route: Route }) => {
     return (
       <InstagramTabContent
         activePercentage={activePercentage}

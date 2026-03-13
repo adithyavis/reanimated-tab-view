@@ -10,7 +10,7 @@ type AutoScrollToRouteIndexParams = {
 };
 
 export const useTabBarAutoScroll = (
-  flatListRef: RefObject<FlatList>,
+  flatListRef: RefObject<FlatList | null>,
   currentRouteIndex: number,
   layout: Layout
 ) => {

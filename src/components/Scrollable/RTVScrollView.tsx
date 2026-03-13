@@ -139,7 +139,7 @@ export const RTVScrollView = React.memo(
         <RTVScrollViewWithoutScrollHandler
           {...rest}
           onScroll={handleScroll}
-          ref={scrollRef}
+          ref={scrollRef as unknown as React.Ref<Animated.ScrollView>}
         />
       );
       //#endregion

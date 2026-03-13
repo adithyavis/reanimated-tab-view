@@ -1,43 +1,35 @@
 const path = require('path');
-const escape = require('escape-string-regexp');
-const { getDefaultConfig } = require('@expo/metro-config');
-const exclusionList = require('metro-config/src/defaults/exclusionList');
+const { getDefaultConfig } = require('expo/metro-config');
 const pak = require('../package.json');
 
-const root = path.resolve(__dirname, '..');
+const projectRoot = __dirname;
+const monorepoRoot = path.resolve(projectRoot, '..');
 const modules = Object.keys({ ...pak.peerDependencies });
 
-const defaultConfig = getDefaultConfig(__dirname);
+const config = getDefaultConfig(projectRoot);
 
-/**
- * Metro configuration
- * https://facebook.github.io/metro/docs/configuration
- *
- * @type {import('metro-config').MetroConfig}
- */
-const config = {
-  ...defaultConfig,
+config.watchFolders = [monorepoRoot];
 
-  projectRoot: __dirname,
-  watchFolders: [root],
+config.resolver = {
+  ...config.resolver,
 
-  // We need to make sure that only one version is loaded for peerDependencies
-  // So we block them at the root, and alias them to the versions in example's node_modules
-  resolver: {
-    ...defaultConfig.resolver,
+  // Block peer deps from the monorepo root so only the example's versions are used.
+  // Uses a regex that handles both Windows (\) and Unix (/) path separators.
+  blockList: modules.map((m) => {
+    const modulePath = path.join(monorepoRoot, 'node_modules', m);
+    const escaped = modulePath.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    return new RegExp(`^${escaped}[/\\\\].*$`);
+  }),
 
-    blacklistRE: exclusionList(
-      modules.map(
-        (m) =>
-          new RegExp(`^${escape(path.join(root, 'node_modules', m))}\\/.*$`)
-      )
-    ),
+  extraNodeModules: modules.reduce((acc, name) => {
+    acc[name] = path.join(projectRoot, 'node_modules', name);
+    return acc;
+  }, {}),
 
-    extraNodeModules: modules.reduce((acc, name) => {
-      acc[name] = path.join(__dirname, 'node_modules', name);
-      return acc;
-    }, {}),
-  },
+  nodeModulesPaths: [
+    path.resolve(projectRoot, 'node_modules'),
+    path.resolve(monorepoRoot, 'node_modules'),
+  ],
 };
 
 module.exports = config;

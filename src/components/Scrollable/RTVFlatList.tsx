@@ -1,19 +1,24 @@
 import React, {
   forwardRef,
-  useCallback,
   useImperativeHandle,
-  useRef,
+  useMemo,
   type ForwardedRef,
 } from 'react';
-import { type ScrollViewProps } from 'react-native';
-import Animated from 'react-native-reanimated';
-import { RTVScrollViewWithoutScrollHandler } from './RTVScrollView';
+import { GestureDetector, Gesture } from 'react-native-gesture-handler';
+import Animated, {
+  useAnimatedRef,
+  useAnimatedStyle,
+} from 'react-native-reanimated';
 import type { FlatListProps } from 'react-native';
 import { useScrollHandlers } from '../../hooks/scrollable/useScrollHandlers';
+import { useHeaderContext } from '../../providers/Header';
+import { useInternalContext } from '../../providers/Internal';
+import { useSyncScrollWithPanTranslation } from '../../hooks/scrollable/useSyncScrollWithPanTranslation';
+import { SHOULD_RENDER_ABSOLUTE_HEADER } from '../../constants/scrollable';
 
 function _RTVFlatList<T>(
   props: FlatListProps<T>,
-  ref: React.ForwardedRef<Animated.FlatList<T>>
+  ref: ForwardedRef<Animated.FlatList<T>>
 ) {
   const {
     onScroll,
@@ -21,10 +26,11 @@ function _RTVFlatList<T>(
     onScrollBeginDrag,
     onMomentumScrollEnd,
     onMomentumScrollBegin,
+    contentContainerStyle,
     ...restProps
   } = props;
 
-  const flatListRef = useRef<Animated.FlatList<T>>(null);
+  const flatListRef = useAnimatedRef<Animated.FlatList<T>>();
 
   const handleScroll = useScrollHandlers({
     onScroll,
@@ -34,21 +40,72 @@ function _RTVFlatList<T>(
     onMomentumScrollBegin,
   });
 
-  const renderScrollComponent = useCallback(
-    (scrollViewProps: ScrollViewProps) => {
-      return <RTVScrollViewWithoutScrollHandler {...scrollViewProps} />;
-    },
+  const { animatedTranslateYSV } = useHeaderContext();
+  const { tabViewHeaderLayout, tabBarLayout, tabViewCarouselLayout } =
+    useInternalContext();
+
+  const scrollGesture = useMemo(
+    () =>
+      Gesture.Native()
+        .shouldCancelWhenOutside(false)
+        .disallowInterruption(true),
     []
   );
-  useImperativeHandle(ref, () => flatListRef.current as any);
+
+  const animatedContentContainerStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ translateY: animatedTranslateYSV.value }],
+    };
+  }, [animatedTranslateYSV]);
+
+  const resolvedContentContainerStyle = useMemo(() => {
+    if (SHOULD_RENDER_ABSOLUTE_HEADER) {
+      return [
+        contentContainerStyle,
+        {
+          paddingTop: tabBarLayout.height + tabViewHeaderLayout.height,
+          minHeight: tabViewCarouselLayout.height + tabViewHeaderLayout.height,
+        },
+      ];
+    }
+    return [
+      contentContainerStyle,
+      animatedContentContainerStyle,
+      {
+        paddingBottom: tabViewHeaderLayout.height,
+        minHeight: tabViewCarouselLayout.height + tabViewHeaderLayout.height,
+      },
+    ];
+  }, [
+    contentContainerStyle,
+    animatedContentContainerStyle,
+    tabBarLayout.height,
+    tabViewHeaderLayout.height,
+    tabViewCarouselLayout.height,
+  ]);
+
+  useImperativeHandle(ref, () => flatListRef.current as Animated.FlatList<T>);
+
+  useSyncScrollWithPanTranslation(
+    flatListRef as unknown as Parameters<typeof useSyncScrollWithPanTranslation>[0]
+  );
+
+  // Cast needed: Reanimated 4's AnimatedFlatList types are stricter than needed
+  // for valid prop combinations (animated onScroll + animated ref + animated contentContainerStyle)
+  const FlatListComponent = Animated.FlatList as unknown as React.ComponentType<
+    FlatListProps<T> & { ref?: React.Ref<Animated.FlatList<T>> }
+  >;
 
   return (
-    <Animated.FlatList
-      ref={flatListRef}
-      {...restProps}
-      renderScrollComponent={renderScrollComponent}
-      onScroll={handleScroll}
-    />
+    <GestureDetector gesture={scrollGesture}>
+      <FlatListComponent
+        ref={flatListRef as unknown as React.Ref<Animated.FlatList<T>>}
+        {...restProps}
+        contentContainerStyle={resolvedContentContainerStyle}
+        onScroll={handleScroll as unknown as NonNullable<FlatListProps<T>['onScroll']>}
+        scrollEventThrottle={16}
+      />
+    </GestureDetector>
   );
 }
 

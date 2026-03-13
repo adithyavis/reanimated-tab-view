@@ -45,7 +45,7 @@ export const useScrollHandlers = ({
       if (_onScroll) {
         runOnJS(_onScroll)({
           nativeEvent: event,
-        } as NativeSyntheticEvent<NativeScrollEvent>);
+        } as unknown as NativeSyntheticEvent<NativeScrollEvent>);
       }
     },
     onBeginDrag: (event) => {
@@ -56,28 +56,28 @@ export const useScrollHandlers = ({
       if (_onScrollBeginDrag) {
         runOnJS(_onScrollBeginDrag)({
           nativeEvent: event,
-        } as NativeSyntheticEvent<NativeScrollEvent>);
+        } as unknown as NativeSyntheticEvent<NativeScrollEvent>);
       }
     },
     onEndDrag: (event) => {
       if (_onScrollEndDrag) {
         runOnJS(_onScrollEndDrag)({
           nativeEvent: event,
-        } as NativeSyntheticEvent<NativeScrollEvent>);
+        } as unknown as NativeSyntheticEvent<NativeScrollEvent>);
       }
     },
     onMomentumEnd: (event) => {
       if (_onMomentumScrollEnd) {
         runOnJS(_onMomentumScrollEnd)({
           nativeEvent: event,
-        } as NativeSyntheticEvent<NativeScrollEvent>);
+        } as unknown as NativeSyntheticEvent<NativeScrollEvent>);
       }
     },
     onMomentumBegin: (event) => {
       if (_onMomentumScrollBegin) {
         runOnJS(_onMomentumScrollBegin)({
           nativeEvent: event,
-        } as NativeSyntheticEvent<NativeScrollEvent>);
+        } as unknown as NativeSyntheticEvent<NativeScrollEvent>);
       }
     },
   });

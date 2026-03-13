@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useMemo } from 'react';
-import { useSharedValue, type SharedValue } from 'react-native-reanimated';
+import { makeMutable, useSharedValue, type SharedValue } from 'react-native-reanimated';
 import { useInternalContext } from './Internal';
 import { GestureSource } from '../constants/scrollable';
 
@@ -10,9 +10,9 @@ type HeaderContext = {
 };
 
 const HeaderContext = createContext<HeaderContext>({
-  animatedTranslateYSV: { value: 0 },
-  gestureSourceSV: { value: GestureSource.SCROLL },
-  translateYBoundsUpperSV: { value: 0 },
+  animatedTranslateYSV: makeMutable(0),
+  gestureSourceSV: makeMutable<GestureSource>(GestureSource.SCROLL),
+  translateYBoundsUpperSV: makeMutable(0),
 });
 
 type HeaderContextProviderProps = {

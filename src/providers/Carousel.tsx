@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useMemo } from 'react';
 import { useInternalContext } from './Internal';
-import { useSharedValue, type SharedValue } from 'react-native-reanimated';
+import { makeMutable, useSharedValue, type SharedValue } from 'react-native-reanimated';
 import { usePropsContext } from './Props';
 
 type CarouselContext = {
@@ -11,12 +11,12 @@ type CarouselContext = {
 
 const CarouselContext = createContext<CarouselContext>({
   translationPerSceneContainer: 0,
-  swipeTranslationXSV: { value: 0 },
-  currentRouteIndexSV: { value: 0 },
+  swipeTranslationXSV: makeMutable(0),
+  currentRouteIndexSV: makeMutable(0),
 });
 
 export const CarouselContextProvider = React.memo(
-  function CarouselContextProvider({ children }) {
+  function CarouselContextProvider({ children }: { children: React.ReactNode }) {
     //#region context
     const { navigationState, sceneContainerGap } = usePropsContext();
 

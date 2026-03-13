@@ -1,5 +1,6 @@
 import * as React from 'react';
 
+import converter from 'number-to-words';
 import {
   Button,
   Dimensions,
@@ -12,16 +13,16 @@ import {
 } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import {
-  TabView as ReanimatedTabView,
-  type NavigationState,
-  type TabViewMethods,
-  RTVScrollView,
-} from 'reanimated-tab-view';
-import {
-  TabView as TabView,
   TabBar as ReactNavigationTabBar,
+  TabView,
 } from 'react-native-tab-view';
-import converter from 'number-to-words';
+import {
+  TabView as ReanimatedTabView,
+  RTVScrollView,
+  type NavigationState,
+  type SceneRendererProps,
+  type TabViewMethods,
+} from 'reanimated-tab-view';
 import { InstagramTabView } from './instagram/InstagramTabView';
 
 const randomColor = (() => {
@@ -64,12 +65,12 @@ export default function App() {
     React.useState(true);
 
   const toggleShowReanimatedTabView = React.useCallback(
-    () => setShowReanimatedTabView((prev) => !prev),
+    () => setShowReanimatedTabView((prev: boolean) => !prev),
     []
   );
 
   const renderTabBar = React.useCallback(
-    (props) => <ReactNavigationTabBar {...props} scrollEnabled />,
+    (props: any) => <ReactNavigationTabBar {...props} scrollEnabled />,
     []
   );
 
@@ -89,15 +90,19 @@ export default function App() {
     []
   );
 
-  const renderScene = React.useCallback(({ route }) => {
-    return (
-      <Scene
-        backgroundColor={route.color}
-        text={`Scene ${converter.toWords(parseInt(route.key, 10) + 1)}`}
-        routeIndex={parseInt(route.key, 10)}
-      />
-    );
-  }, []);
+  const renderScene = React.useCallback(
+    ({ route }: SceneRendererProps) => {
+      const typedRoute = route as { key: string; color: string };
+      return (
+        <Scene
+          backgroundColor={typedRoute.color}
+          text={`Scene ${converter.toWords(parseInt(typedRoute.key, 10) + 1)}`}
+          routeIndex={parseInt(typedRoute.key, 10)}
+        />
+      );
+    },
+    []
+  );
 
   const handleIndexChange = React.useCallback((index: number) => {
     setNavigationState((state) => ({ ...state, index }));

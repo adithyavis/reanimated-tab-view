@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 import { useTabLayoutContext } from '../providers/TabLayout';
+import type { RouteIndexToTabContentWidthMap } from '../types/TabBar';
 import { runOnJS, runOnUI } from 'react-native-reanimated';
 import type { LayoutChangeEvent } from 'react-native';
 import { useInternalContext } from '../providers/Internal';
@@ -10,11 +11,12 @@ export const useHandleTabLayout = (index: number) => {
     useTabLayoutContext();
 
   const handleTabLayout = useCallback(
-    ({ nativeEvent }: LayoutChangeEvent) => {
+    (event: LayoutChangeEvent) => {
+      const layout = event.nativeEvent.layout;
       function updateTabWidthAndOffset() {
         'worklet';
 
-        const { width } = nativeEvent.layout;
+        const { width } = layout;
         const prevWidth = routeIndexToTabWidthMapSV.value[index] ?? 0;
         if (width !== prevWidth) {
           routeIndexToTabWidthMapSV.value = {
@@ -50,7 +52,7 @@ export const useHandleTabContentLayout = (index: number) => {
 
   const updateTabContentWidthMap = useCallback(
     (width: number) => {
-      setRouteIndexToTabContentWidthMap((prev) => ({
+      setRouteIndexToTabContentWidthMap((prev: RouteIndexToTabContentWidthMap) => ({
         ...prev,
         [index]: width,
       }));
@@ -59,11 +61,12 @@ export const useHandleTabContentLayout = (index: number) => {
   );
 
   const handleTabContentLayout = useCallback(
-    ({ nativeEvent }: LayoutChangeEvent) => {
+    (event: LayoutChangeEvent) => {
+      const layout = event.nativeEvent.layout;
       function updateTabContentWidthAndOffset() {
         'worklet';
 
-        const { width } = nativeEvent.layout;
+        const { width } = layout;
         const prevWidth = routeIndexToTabContentWidthMapSV.value[index] ?? 0;
         if (width !== prevWidth) {
           routeIndexToTabContentWidthMapSV.value = {
