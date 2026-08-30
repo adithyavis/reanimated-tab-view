@@ -5,7 +5,9 @@ import {
   TabBar,
   type TabBarProps,
   type NavigationState,
+  type Route,
   type TabBarConfig,
+  type TabContentProps,
 } from 'reanimated-tab-view';
 import { HEADER_HEIGHT, InstagramHeader } from './InstagramHeader';
 import { InstagramTabContent } from './InstagramTabContent';
@@ -56,15 +58,18 @@ export const InstagramTabView = () => {
     return <InstagramHeader />;
   }, []);
 
-  const renderTabContent = useCallback(({ activePercentage, route }) => {
-    return (
-      <InstagramTabContent
-        activePercentage={activePercentage}
-        route={route}
-        style={styles.label}
-      />
-    );
-  }, []);
+  const renderTabContent = useCallback(
+    ({ activePercentage, route }: TabContentProps & { route: Route }) => {
+      return (
+        <InstagramTabContent
+          activePercentage={activePercentage}
+          route={route}
+          style={styles.label}
+        />
+      );
+    },
+    []
+  );
 
   const renderTabBar = useCallback(
     (props: TabBarProps) => (

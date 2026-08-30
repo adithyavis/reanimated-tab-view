@@ -14,12 +14,15 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import {
   TabView as ReanimatedTabView,
   type NavigationState,
+  type Route,
+  type SceneRendererProps,
   type TabViewMethods,
   RTVScrollView,
 } from 'reanimated-tab-view';
 import {
   TabView as TabView,
   TabBar as ReactNavigationTabBar,
+  type TabBarProps,
 } from 'react-native-tab-view';
 import converter from 'number-to-words';
 import { InstagramTabView } from './instagram/InstagramTabView';
@@ -69,7 +72,9 @@ export default function App() {
   );
 
   const renderTabBar = React.useCallback(
-    (props) => <ReactNavigationTabBar {...props} scrollEnabled />,
+    (props: TabBarProps<Route>) => (
+      <ReactNavigationTabBar {...props} scrollEnabled />
+    ),
     []
   );
 
@@ -89,12 +94,13 @@ export default function App() {
     []
   );
 
-  const renderScene = React.useCallback(({ route }) => {
+  const renderScene = React.useCallback(({ route }: SceneRendererProps) => {
+    const { color, key } = route as Route & { color: string };
     return (
       <Scene
-        backgroundColor={route.color}
-        text={`Scene ${converter.toWords(parseInt(route.key, 10) + 1)}`}
-        routeIndex={parseInt(route.key, 10)}
+        backgroundColor={color}
+        text={`Scene ${converter.toWords(parseInt(key, 10) + 1)}`}
+        routeIndex={parseInt(key, 10)}
       />
     );
   }, []);
