@@ -1,6 +1,6 @@
 {
   "name": "reanimated-tab-view",
-  "version": "0.5.0",
+  "version": "1.0.0",
   "description": "Tab view component implemented using Reanimated 4",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -117,11 +117,9 @@
     ]
   },
   "release-it": {
-    "hooks": {
-      "after:bump": "yarn docs:version ${latestVersion} && git add docs/versioned_docs docs/versioned_sidebars docs/versions.json"
-    },
+    "increment": false,
     "git": {
-      "commitMessage": "chore: release ${version}",
+      "commit": false,
       "tagName": "v${version}"
     },
     "npm": {
