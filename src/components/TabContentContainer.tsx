@@ -26,14 +26,19 @@ const TabContentContainer = React.memo<TabContentContainerProps>((props) => {
   const { index, style, children: renderTabContent } = props;
 
   const { animatedRouteIndex } = useInternalContext();
-  const { handleTabContentLayout } = useHandleTabContentLayout(index);
+  const { tabContentRef, handleTabContentLayout } =
+    useHandleTabContentLayout(index);
 
   const activePercentSV = useDerivedValue(() => {
     return Math.min(100, 100 * Math.abs(animatedRouteIndex.value - index));
   });
 
   return (
-    <View onLayout={handleTabContentLayout} style={[styles.tabBarItem, style]}>
+    <View
+      ref={tabContentRef}
+      onLayout={handleTabContentLayout}
+      style={[styles.tabBarItem, style]}
+    >
       {renderTabContent(activePercentSV)}
     </View>
   );
