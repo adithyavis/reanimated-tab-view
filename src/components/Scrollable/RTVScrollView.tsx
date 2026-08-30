@@ -1,4 +1,4 @@
-import React, { forwardRef, useImperativeHandle, useMemo } from 'react';
+import React, { forwardRef, useImperativeHandle, useMemo, useRef } from 'react';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
   useAnimatedRef,
@@ -119,7 +119,7 @@ export const RTVScrollView = React.memo(
       //#endregion
 
       //#region variables
-      const scrollRef = useAnimatedRef<Animated.ScrollView>();
+      const scrollRef = useRef<Animated.ScrollView>(null);
 
       const handleScroll = useScrollHandlers({
         onScroll,

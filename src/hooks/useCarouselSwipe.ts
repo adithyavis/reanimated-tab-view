@@ -13,7 +13,7 @@ import { usePropsContext } from '../providers/Props';
 import { useJumpContext } from '../providers/Jump';
 import { useCarouselContext } from '../providers/Carousel';
 
-const ACTIVE_OFFSET_X = [-10, 10];
+const ACTIVE_OFFSET_X: [number, number] = [-10, 10] as const;
 
 export const useCarouselSwipePanGesture = (
   updateCurrentRouteIndex: (value: number) => void,

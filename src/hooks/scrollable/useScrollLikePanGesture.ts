@@ -11,7 +11,7 @@ import {
 } from '../../constants/scrollable';
 import { useHeaderContext } from '../../providers/Header';
 
-const ACTIVE_OFFSET_Y = [-10, 10];
+const ACTIVE_OFFSET_Y: [number, number] = [-10, 10];
 
 export const useScrollLikePanGesture = () => {
   const { animatedTranslateYSV, gestureSourceSV, translateYBoundsUpperSV } =
