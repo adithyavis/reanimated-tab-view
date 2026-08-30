@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useMemo } from 'react';
 import { useSharedValue, type SharedValue } from 'react-native-reanimated';
 import { useInternalContext } from './Internal';
 import { GestureSource } from '../constants/scrollable';
+import { noopSharedValue } from '../constants/common';
 
 type HeaderContext = {
   animatedTranslateYSV: SharedValue<number>;
@@ -10,9 +11,9 @@ type HeaderContext = {
 };
 
 const HeaderContext = createContext<HeaderContext>({
-  animatedTranslateYSV: { value: 0 },
-  gestureSourceSV: { value: GestureSource.SCROLL },
-  translateYBoundsUpperSV: { value: 0 },
+  animatedTranslateYSV: noopSharedValue(0),
+  gestureSourceSV: noopSharedValue<GestureSource>(GestureSource.SCROLL),
+  translateYBoundsUpperSV: noopSharedValue(0),
 });
 
 type HeaderContextProviderProps = {

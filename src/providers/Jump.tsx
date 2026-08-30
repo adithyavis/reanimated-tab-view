@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useMemo, useState } from 'react';
 import { useInternalContext } from './Internal';
 import { useSharedValue, type SharedValue } from 'react-native-reanimated';
-import { noop } from '../constants/common';
+import { noop, noopSharedValue } from '../constants/common';
 
 type JumpContext = {
   isJumping: boolean;
@@ -16,50 +16,52 @@ type JumpContext = {
 const JumpContext = createContext<JumpContext>({
   isJumping: false,
   setIsJumping: noop,
-  jumpEndRouteIndexSV: { value: null },
+  jumpEndRouteIndexSV: noopSharedValue<number | null>(null),
   smoothJumpStartRouteIndex: 0,
   setSmoothJumpStartRouteIndex: noop,
-  smoothJumpStartRouteIndexSV: { value: 0 },
-  smoothJumpStartRouteTranslationXSV: { value: 0 },
+  smoothJumpStartRouteIndexSV: noopSharedValue(0),
+  smoothJumpStartRouteTranslationXSV: noopSharedValue(0),
 });
 
-export const JumpContextProvider = React.memo(function JumpContextProvider({
-  children,
-}) {
-  //#region variables
-  const { initialRouteIndex } = useInternalContext();
+export const JumpContextProvider = React.memo<React.PropsWithChildren>(
+  function JumpContextProvider({ children }) {
+    //#region variables
+    const { initialRouteIndex } = useInternalContext();
 
-  const jumpEndRouteIndexSV = useSharedValue<number | null>(null);
+    const jumpEndRouteIndexSV = useSharedValue<number | null>(null);
 
-  const [isJumping, setIsJumping] = useState(false);
+    const [isJumping, setIsJumping] = useState(false);
 
-  const [smoothJumpStartRouteIndex, setSmoothJumpStartRouteIndex] =
-    useState(initialRouteIndex);
-  const smoothJumpStartRouteIndexSV = useSharedValue(initialRouteIndex);
+    const [smoothJumpStartRouteIndex, setSmoothJumpStartRouteIndex] =
+      useState(initialRouteIndex);
+    const smoothJumpStartRouteIndexSV = useSharedValue(initialRouteIndex);
 
-  const smoothJumpStartRouteTranslationXSV = useSharedValue(0);
-  //#endregion
+    const smoothJumpStartRouteTranslationXSV = useSharedValue(0);
+    //#endregion
 
-  const value = useMemo(
-    () => ({
-      isJumping,
-      setIsJumping,
-      smoothJumpStartRouteIndex,
-      setSmoothJumpStartRouteIndex,
-      smoothJumpStartRouteIndexSV,
-      smoothJumpStartRouteTranslationXSV,
-      jumpEndRouteIndexSV,
-    }),
-    [
-      isJumping,
-      smoothJumpStartRouteIndex,
-      smoothJumpStartRouteIndexSV,
-      smoothJumpStartRouteTranslationXSV,
-      jumpEndRouteIndexSV,
-    ]
-  );
+    const value = useMemo(
+      () => ({
+        isJumping,
+        setIsJumping,
+        smoothJumpStartRouteIndex,
+        setSmoothJumpStartRouteIndex,
+        smoothJumpStartRouteIndexSV,
+        smoothJumpStartRouteTranslationXSV,
+        jumpEndRouteIndexSV,
+      }),
+      [
+        isJumping,
+        smoothJumpStartRouteIndex,
+        smoothJumpStartRouteIndexSV,
+        smoothJumpStartRouteTranslationXSV,
+        jumpEndRouteIndexSV,
+      ]
+    );
 
-  return <JumpContext.Provider value={value}>{children}</JumpContext.Provider>;
-});
+    return (
+      <JumpContext.Provider value={value}>{children}</JumpContext.Provider>
+    );
+  }
+);
 
 export const useJumpContext = () => useContext(JumpContext);
