@@ -8,8 +8,11 @@ sidebar_position: 1
 
 Reanimated Tab View requires the following peer dependencies:
 
-- [react-native-reanimated](https://docs.swmansion.com/react-native-reanimated/) (>= 3.0.0)
+- [react-native-reanimated](https://docs.swmansion.com/react-native-reanimated/) (>= 4.0.0)
+- [react-native-worklets](https://docs.swmansion.com/react-native-worklets/) (>= 0.4.0)
 - [react-native-gesture-handler](https://docs.swmansion.com/react-native-gesture-handler/) (>= 2.9.0)
+
+Reanimated 4 runs on the New Architecture only, so your app must have it enabled.
 
 Make sure you have them installed and configured in your project before proceeding. Follow the official installation guides:
 

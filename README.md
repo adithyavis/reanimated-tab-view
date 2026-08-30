@@ -89,9 +89,9 @@ Additionally, reanimated-tab-view also provides the following features
 
 You can also refer to https://adithyavis.github.io/reanimated-tab-view/docs/installation.
 
-Install react-native-reanimated (>=2.x) and react-native-gesture-handler (>=2.x).
+Install react-native-reanimated (>=4.x), react-native-worklets (>=0.4.x) and react-native-gesture-handler (>=2.x). Reanimated 4 runs on the New Architecture only, so your app must have it enabled.
 
-- https://docs.swmansion.com/react-native-reanimated/docs/2.x/fundamentals/installation
+- https://docs.swmansion.com/react-native-reanimated/docs/fundamentals/getting-started
 - https://docs.swmansion.com/react-native-gesture-handler/docs/fundamentals/installation
 
 Open a Terminal in the project root and run:

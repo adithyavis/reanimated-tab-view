@@ -18,7 +18,7 @@ yarn remove react-native-tab-view react-native-pager-view
 yarn add reanimated-tab-view
 ```
 
-Ensure `react-native-reanimated` (>= 3.0.0) and `react-native-gesture-handler` (>= 2.9.0) are installed.
+Ensure `react-native-reanimated` (>= 4.0.0), `react-native-worklets` (>= 0.4.0) and `react-native-gesture-handler` (>= 2.9.0) are installed.
 
 ## Import changes
 
