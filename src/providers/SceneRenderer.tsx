@@ -5,6 +5,7 @@ import {
   type SharedValue,
 } from 'react-native-reanimated';
 import { useInternalContext } from '../providers/Internal';
+import { noopSharedValue } from '../constants/common';
 
 type SceneRendererContext = {
   isRouteFocusedSV: SharedValue<boolean>;
@@ -12,8 +13,8 @@ type SceneRendererContext = {
 };
 
 const SceneRendererContext = createContext<SceneRendererContext>({
-  isRouteFocusedSV: { value: false } as SharedValue<boolean>,
-  scrollYSV: { value: 0 } as SharedValue<number>,
+  isRouteFocusedSV: noopSharedValue(false),
+  scrollYSV: noopSharedValue(0),
 });
 
 type SceneRendererContextProviderProps = {
