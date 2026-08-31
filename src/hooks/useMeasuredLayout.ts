@@ -7,34 +7,55 @@ import type {
 
 export type MeasuredLayout = LayoutRectangle;
 
-/**
- * Wires up both ways of learning a view's geometry.
- *
- * Under the new architecture layout is computed during the commit, so
- * `ref.measure` inside `useLayoutEffect` reports the final geometry in the same
- * frame it is calculated. `onLayout` only reaches JS as an event, after the
- * views have already been mounted, so it is kept as the signal for any layout
- * change that happens after mount.
- *
- * @see https://reactnative.dev/docs/the-new-architecture/layout-measurements
- */
+const isSameLayout = (a: MeasuredLayout | null, b: MeasuredLayout) =>
+  a !== null &&
+  a.x === b.x &&
+  a.y === b.y &&
+  a.width === b.width &&
+  a.height === b.height;
+
 export const useMeasuredLayout = <T extends NativeMethods>(
   applyLayout: (layout: MeasuredLayout) => void
 ) => {
   const ref = useRef<T>(null);
+  const lastLayoutRef = useRef<MeasuredLayout | null>(null);
 
-  const onLayout = useCallback(
-    ({ nativeEvent }: LayoutChangeEvent) => {
-      applyLayout(nativeEvent.layout);
+  const apply = useCallback(
+    (layout: MeasuredLayout) => {
+      if (isSameLayout(lastLayoutRef.current, layout)) {
+        return;
+      }
+      lastLayoutRef.current = layout;
+      applyLayout(layout);
     },
     [applyLayout]
   );
 
+  const onLayout = useCallback(
+    ({ nativeEvent }: LayoutChangeEvent) => {
+      apply(nativeEvent.layout);
+    },
+    [apply]
+  );
+
   useLayoutEffect(() => {
+    let isCancelled = false;
     ref.current?.measure((x, y, width, height) => {
-      applyLayout({ x, y, width, height });
+      if (isCancelled) {
+        return;
+      }
+      if (![x, y, width, height].every(Number.isFinite)) {
+        return;
+      }
+      if (width === 0 && height === 0 && lastLayoutRef.current !== null) {
+        return;
+      }
+      apply({ x, y, width, height });
     });
-  }, [applyLayout]);
+    return () => {
+      isCancelled = true;
+    };
+  });
 
   return { ref, onLayout };
 };
