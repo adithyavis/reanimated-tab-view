@@ -20,10 +20,7 @@ import {
 } from '../providers/Carousel';
 import { Scene } from './Scene';
 import { SceneRendererContextProvider } from '../providers/SceneRenderer';
-import {
-  useMeasuredLayout,
-  type MeasuredLayout,
-} from '../hooks/useMeasuredLayout';
+import { useLayout } from '../hooks/useLayout';
 
 export type CarouselImperativeHandle = {
   jumpToRoute: (route: string) => void;
@@ -79,24 +76,14 @@ const TabViewCarouselWithoutProviders = React.memo(
       [currentRouteIndex, setCurrentRouteIndex, keyboardDismissMode]
     );
 
-    const applyTabViewCarouselLayout = useCallback(
-      ({ width, height }: MeasuredLayout) => {
-        setTabViewCarouselLayout((prevLayout) => ({
-          ...prevLayout,
-          width,
-          height,
-        }));
-      },
-      [setTabViewCarouselLayout]
-    );
-
-    const {
-      ref: tabViewCarouselContainerRef,
-      onLayout: onTabViewCarouselLayout,
-    } = useMeasuredLayout<View>(applyTabViewCarouselLayout);
     //#endregion
 
     //#region hooks
+    const {
+      ref: tabViewCarouselContainerRef,
+      onLayout: onTabViewCarouselLayout,
+    } = useLayout<View>(setTabViewCarouselLayout);
+
     const { isLazyLoadingEnabled, handleSceneMount, computeShouldRenderRoute } =
       useCarouselLazyLoading();
 

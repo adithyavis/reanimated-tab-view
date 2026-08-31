@@ -1,10 +1,11 @@
-import React, { useCallback } from 'react';
-import type { LayoutChangeEvent } from 'react-native';
+import React from 'react';
+import type { View } from 'react-native';
 import Animated, { useDerivedValue } from 'react-native-reanimated';
 import type { TabViewHeaderProps } from '../types/TabViewHeaderProps';
 import { useInternalContext } from '../providers/Internal';
 import { useHeaderContext } from '../providers/Header';
 import { usePropsContext } from '../providers/Props';
+import { useLayout } from '../hooks/useLayout';
 
 export const TabViewHeader = React.memo<TabViewHeaderProps>(({ style }) => {
   const { setTabViewHeaderLayout } = useInternalContext();
@@ -13,17 +14,8 @@ export const TabViewHeader = React.memo<TabViewHeaderProps>(({ style }) => {
 
   const { animatedTranslateYSV, translateYBoundsUpperSV } = useHeaderContext();
 
-  const onTabViewHeaderLayout = useCallback(
-    ({ nativeEvent }: LayoutChangeEvent) => {
-      const { width, height } = nativeEvent.layout;
-      setTabViewHeaderLayout((prevLayout) => ({
-        ...prevLayout,
-        width,
-        height,
-      }));
-    },
-    [setTabViewHeaderLayout]
-  );
+  const { ref: tabViewHeaderRef, onLayout: onTabViewHeaderLayout } =
+    useLayout<View>(setTabViewHeaderLayout);
 
   const collapsedPercentageSV = useDerivedValue(() => {
     const translateYBoundsUpper = translateYBoundsUpperSV.value;
@@ -34,7 +26,11 @@ export const TabViewHeader = React.memo<TabViewHeaderProps>(({ style }) => {
   });
 
   return (
-    <Animated.View onLayout={onTabViewHeaderLayout} style={style}>
+    <Animated.View
+      ref={tabViewHeaderRef}
+      onLayout={onTabViewHeaderLayout}
+      style={style}
+    >
       {renderHeader?.({
         collapsedPercentage: collapsedPercentageSV,
         collapsedHeaderHeight: animatedTranslateYSV,

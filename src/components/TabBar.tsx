@@ -11,9 +11,9 @@ import { TAB_BAR_HEIGHT } from '../constants/tabBar';
 import Tab from './Tab';
 import { usePropsContext } from '../providers/Props';
 import { useInternalContext } from '../providers/Internal';
-import type { LayoutChangeEvent } from 'react-native';
 import TabContentContainer from './TabContentContainer';
 import { useTabLayoutContext } from '../providers/TabLayout';
+import { useLayout } from '../hooks/useLayout';
 
 export const TabBar = React.memo((props: TabBarProps) => {
   //#region props
@@ -58,21 +58,10 @@ export const TabBar = React.memo((props: TabBarProps) => {
   const data: Route[] = routes;
   //#endregion
 
-  //#region callbacks
-  const onTabBarLayout = useCallback(
-    ({ nativeEvent }: LayoutChangeEvent) => {
-      const { width, height } = nativeEvent.layout;
-      setTabBarLayout((prevLayout) => ({
-        ...prevLayout,
-        width,
-        height,
-      }));
-    },
-    [setTabBarLayout]
-  );
-  //#endregion
-
   //#region hooks
+  const { ref: tabBarRef, onLayout: onTabBarLayout } =
+    useLayout<View>(setTabBarLayout);
+
   const { autoScrollToRouteIndex, handleScrollToIndexFailed } =
     useTabBarAutoScroll(flatListRef, currentRouteIndex, tabBarLayout);
   //#endregion
@@ -173,6 +162,7 @@ export const TabBar = React.memo((props: TabBarProps) => {
   //#region render
   return (
     <View
+      ref={tabBarRef}
       style={[styles.tabBarContainer, tabBarContainerStyle]}
       onLayout={onTabBarLayout}
     >
