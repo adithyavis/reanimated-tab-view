@@ -35,8 +35,7 @@
     "web-build": "yarn workspace reanimated-tab-view-example web-build",
     "release": "release-it",
     "docs": "yarn workspace docs start",
-    "docs:build": "yarn workspace docs build",
-    "docs:version": "yarn workspace docs docusaurus docs:version"
+    "docs:build": "yarn workspace docs build"
   },
   "keywords": [
     "react-native",
@@ -60,10 +59,12 @@
   "devDependencies": {
     "@commitlint/config-conventional": "^17.0.2",
     "@evilmartians/lefthook": "^1.5.0",
+    "@legendapp/list": "^3.3.9",
     "@react-native-community/eslint-config": "^3.0.1",
     "@react-native/babel-preset": "^0.73.20",
     "@react-native/eslint-config": "^0.72.2",
     "@release-it/conventional-changelog": "^5.0.0",
+    "@shopify/flash-list": "^2.3.2",
     "@types/jest": "^28.1.2",
     "@types/react": "~17.0.21",
     "@types/react-native": "0.70.0",
@@ -90,10 +91,20 @@
     "@types/react": "17.0.21"
   },
   "peerDependencies": {
+    "@legendapp/list": ">=3.0.0",
+    "@shopify/flash-list": ">=2.0.0",
     "react": "*",
     "react-native": "*",
     "react-native-gesture-handler": ">=2.9.0",
     "react-native-reanimated": ">=3.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@legendapp/list": {
+      "optional": true
+    },
+    "@shopify/flash-list": {
+      "optional": true
+    }
   },
   "workspaces": [
     "example",
@@ -116,9 +127,6 @@
     ]
   },
   "release-it": {
-    "hooks": {
-      "after:bump": "yarn docs:version ${latestVersion} && git add docs/versioned_docs docs/versioned_sidebars docs/versions.json"
-    },
     "git": {
       "commitMessage": "chore: release ${version}",
       "tagName": "v${version}",
