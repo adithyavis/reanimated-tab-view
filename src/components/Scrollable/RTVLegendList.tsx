@@ -16,7 +16,7 @@ let LegendList: React.ComponentType<any> | undefined;
 try {
   LegendList = require('@legendapp/list/react-native').LegendList;
 } catch {
-    throw new Error(MISSING_LEGEND_LIST_ERROR);
+  // eslint-disable-next-line no-empty
 }
 
 export type RTVLegendListProps<T> = LegendListProps<T> & {

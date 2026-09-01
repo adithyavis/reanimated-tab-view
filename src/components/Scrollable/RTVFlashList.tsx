@@ -15,7 +15,7 @@ let FlashList: React.ComponentType<any> | undefined;
 try {
   FlashList = require('@shopify/flash-list').FlashList;
 } catch {
-  throw new Error(MISSING_FLASH_LIST_ERROR);
+  // eslint-disable-next-line no-empty
 }
 
 export type RTVFlashListProps<T> = FlashListProps<T> & {
