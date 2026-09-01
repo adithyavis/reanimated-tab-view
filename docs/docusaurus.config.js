@@ -1,9 +1,5 @@
 // @ts-check
-import { createRequire } from 'module';
 import { themes as prismThemes } from 'prism-react-renderer';
-
-const require = createRequire(import.meta.url);
-const { version } = require('../package.json');
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
@@ -35,12 +31,6 @@ const config = {
           sidebarPath: './sidebars.js',
           editUrl:
             'https://github.com/adithyavis/reanimated-tab-view/tree/main/docs/',
-          lastVersion: 'current',
-          versions: {
-            current: {
-              label: version,
-            },
-          },
         },
         blog: false,
         theme: {
@@ -65,11 +55,6 @@ const config = {
             sidebarId: 'docsSidebar',
             position: 'left',
             label: 'Docs',
-          },
-          {
-            type: 'docsVersionDropdown',
-            position: 'right',
-            dropdownActiveClassDisabled: true,
           },
           {
             href: 'https://github.com/adithyavis/reanimated-tab-view',

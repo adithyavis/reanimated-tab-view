@@ -16,6 +16,17 @@ Make sure you have them installed and configured in your project before proceedi
 - [React Native Reanimated installation](https://docs.swmansion.com/react-native-reanimated/docs/fundamentals/getting-started/)
 - [React Native Gesture Handler installation](https://docs.swmansion.com/react-native-gesture-handler/docs/fundamentals/installation)
 
+## Optional peer dependencies
+
+These are only needed if you render the matching component inside a scene:
+
+| Package | Version | Needed for |
+|---------|---------|------------|
+| [@shopify/flash-list](https://shopify.github.io/flash-list/) | >= 2.0.0 | [`RTVFlashList`](./api/components/scrollable/rtv-flash-list.md) |
+| [@legendapp/list](https://www.legendapp.com/open-source/list/) | >= 3.0.0 | [`RTVLegendList`](./api/components/scrollable/rtv-legend-list.md) |
+
+Leaving them out is fine: your app still bundles, and only the component you did not install is unavailable.
+
 ## Install the package
 
 ```bash

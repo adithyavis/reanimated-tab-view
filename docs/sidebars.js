@@ -54,6 +54,8 @@ const sidebars = {
               items: [
                 'api/components/scrollable/rtv-scroll-view',
                 'api/components/scrollable/rtv-flat-list',
+                'api/components/scrollable/rtv-flash-list',
+                'api/components/scrollable/rtv-legend-list',
                 'api/components/scrollable/rtv-refresh-control',
               ],
             },
