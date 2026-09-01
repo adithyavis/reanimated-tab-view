@@ -1,9 +1,5 @@
 // @ts-check
-import { createRequire } from 'module';
 import { themes as prismThemes } from 'prism-react-renderer';
-
-const require = createRequire(import.meta.url);
-const { version } = require('../package.json');
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
@@ -38,7 +34,10 @@ const config = {
           lastVersion: 'current',
           versions: {
             current: {
-              label: version,
+              label: '1.x (Reanimated v4)',
+            },
+            '0.x': {
+              label: '0.x (Reanimated v3)',
             },
           },
         },

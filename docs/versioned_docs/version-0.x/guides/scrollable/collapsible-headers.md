@@ -107,6 +107,32 @@ const PostsTab = () => (
 );
 ```
 
+## Using with RTVFlashList and RTVLegendList
+
+For [FlashList](https://shopify.github.io/flash-list/) or [Legend List](https://www.legendapp.com/open-source/list/) content, use `RTVFlashList` or `RTVLegendList`:
+
+```tsx
+import { RTVFlashList, RTVLegendList } from 'reanimated-tab-view';
+
+const PostsTab = () => (
+  <RTVFlashList
+    data={posts}
+    renderItem={({ item }) => <PostCard post={item} />}
+    keyExtractor={(item) => item.id}
+  />
+);
+
+const CommentsTab = () => (
+  <RTVLegendList
+    data={comments}
+    renderItem={({ item }) => <CommentCard comment={item} />}
+    keyExtractor={(item) => item.id}
+  />
+);
+```
+
+`@shopify/flash-list` and `@legendapp/list` are optional peer dependencies. Install the one you use.
+
 ## Reducing initial jitter
 
 Pass `initialLayout` with `tabViewHeader` dimensions to avoid layout jitter during the first render:

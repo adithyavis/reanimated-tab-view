@@ -49,7 +49,7 @@ export default function App() {
 
 **Cause:** You're using standard `ScrollView` or `FlatList` instead of the provided components.
 
-**Solution:** Use `RTVScrollView` or `RTVFlatList` inside your scenes:
+**Solution:** Use `RTVScrollView`, `RTVFlatList`, `RTVFlashList` or `RTVLegendList` inside your scenes:
 
 ```tsx
 import { RTVScrollView } from 'reanimated-tab-view';
