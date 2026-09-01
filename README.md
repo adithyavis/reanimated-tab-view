@@ -152,7 +152,7 @@ export default function TabViewExample() {
       navigationState={{ index, routes }}
       renderScene={renderScene}
       onIndexChange={setIndex}
-      initialLayout={{ width: layout.width }}
+      initialLayout={{ tabView: { width: layout.width } }}
     />
   );
 }
