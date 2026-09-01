@@ -54,6 +54,7 @@ Additionally, reanimated-tab-view also provides the following features
 - Collapsible headers
 
   - Currently supported on ios and android
+  - Works with `RTVScrollView`, `RTVFlatList`, `RTVFlashList` ([FlashList](https://shopify.github.io/flash-list/)) and `RTVLegendList` ([Legend List](https://www.legendapp.com/open-source/list/))
 
     <img src="./assets/collapsible_header.gif" width="360">
 
@@ -99,6 +100,15 @@ Open a Terminal in the project root and run:
 ```sh
 yarn add reanimated-tab-view
 ```
+
+### Optional peer dependencies
+
+Only needed if you render the matching component inside a scene. Leaving them out is fine.
+
+| Package                                                       | Version  | Needed for      |
+| ------------------------------------------------------------- | -------- | --------------- |
+| [@shopify/flash-list](https://shopify.github.io/flash-list/)   | >= 2.0.0 | `RTVFlashList`  |
+| [@legendapp/list](https://www.legendapp.com/open-source/list/) | >= 3.0.0 | `RTVLegendList` |
 
 ## Quick Start
 
@@ -167,7 +177,7 @@ You can also refer to https://adithyavis.github.io/reanimated-tab-view/docs/api/
 | jumpMode               | Specifies the jump mode of the tab view.                                                                                                                          | No       | `'smooth'\|'scrolling'\|'no-animation'`                                                                                                                                | "smooth"  |
 | tabBarConfig           | Configuration for the tab bar.                                                                                                                                    | No       | `TabBarConfig`- For details, see below.                                                                                                                                | undefined |
 | TabViewHeaderComponent | A component to render as the tab view header.                                                                                                                     | No       | `React.ReactNode`                                                                                                                                                      | undefined |
-| renderScene            | A function that renders the scene for a given route. Use `RTVScrollView` or `RTVFlatList` in order to render collapsible headers through the `renderHeader` prop. | No       | `(props: HeaderRendererProps) => React.ReactNode`                                                                                                                      |           |
+| renderScene            | A function that renders the scene for a given route. Use `RTVScrollView`, `RTVFlatList`, `RTVFlashList` or `RTVLegendList` in order to render collapsible headers through the `renderHeader` prop. | No       | `(props: HeaderRendererProps) => React.ReactNode`                                                                                                                      |           |
 | renderHeader           | A function that renders the header for the tab view.                                                                                                              | No       | `(props: SceneRendererProps) => React.ReactNode`                                                                                                                       | undefined |
 | onIndexChange          | A function that is called when the index changes.                                                                                                                 | Yes      | `(index:number) => void`                                                                                                                                               |           |
 | onSwipeEnd             | Callback function for when a swipe gesture ends.                                                                                                                  | No       | Function                                                                                                                                                               | undefined |
