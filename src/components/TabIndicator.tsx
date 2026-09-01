@@ -30,7 +30,7 @@ const TabIndicator = React.memo((props: TabIndicatorProps) => {
           (routeIndexToTabContentWidthMapSV.value[animatedRouteIndexFloor] ??
             0) /
             2
-        : routeIndexToTabOffsetMapSV.value[animatedRouteIndexFloor] ?? 0;
+        : (routeIndexToTabOffsetMapSV.value[animatedRouteIndexFloor] ?? 0);
     const translateXCeil =
       tabBarType === 'primary'
         ? (routeIndexToTabOffsetMapSV.value[animatedRouteIndexCeil] ?? 0) +
@@ -38,7 +38,7 @@ const TabIndicator = React.memo((props: TabIndicatorProps) => {
           (routeIndexToTabContentWidthMapSV.value[animatedRouteIndexCeil] ??
             0) /
             2
-        : routeIndexToTabOffsetMapSV.value[animatedRouteIndexCeil] ?? 0;
+        : (routeIndexToTabOffsetMapSV.value[animatedRouteIndexCeil] ?? 0);
     const translateX =
       translateXFloor *
         (1 - (animatedRouteIndex.value - animatedRouteIndexFloor)) +
@@ -47,12 +47,12 @@ const TabIndicator = React.memo((props: TabIndicatorProps) => {
 
     const widthFloor =
       tabBarType === 'primary'
-        ? routeIndexToTabContentWidthMapSV.value[animatedRouteIndexFloor] ?? 0
-        : routeIndexToTabWidthMapSV.value[animatedRouteIndexFloor] ?? 0;
+        ? (routeIndexToTabContentWidthMapSV.value[animatedRouteIndexFloor] ?? 0)
+        : (routeIndexToTabWidthMapSV.value[animatedRouteIndexFloor] ?? 0);
     const widthCeil =
       tabBarType === 'primary'
-        ? routeIndexToTabContentWidthMapSV.value[animatedRouteIndexCeil] ?? 0
-        : routeIndexToTabWidthMapSV.value[animatedRouteIndexCeil] ?? 0;
+        ? (routeIndexToTabContentWidthMapSV.value[animatedRouteIndexCeil] ?? 0)
+        : (routeIndexToTabWidthMapSV.value[animatedRouteIndexCeil] ?? 0);
     const width =
       widthFloor * (1 - (animatedRouteIndex.value - animatedRouteIndexFloor)) +
       widthCeil * (1 - (animatedRouteIndexCeil - animatedRouteIndex.value));
@@ -81,6 +81,8 @@ export default TabIndicator;
 const styles = StyleSheet.create({
   tabIndicatorContainer: {
     position: 'absolute',
+    left: 0,
+    top: 0,
     height: '100%',
     justifyContent: 'center',
   },

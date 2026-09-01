@@ -2,7 +2,7 @@ module.exports = {
   root: true,
   parser: '@typescript-eslint/parser',
   extends: [
-    '@react-native-community',
+    '@react-native',
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
   ],
@@ -12,8 +12,8 @@ module.exports = {
   },
   rules: {
     'semi': 0, // semicolons are a thing of the past :)
-    'no-shadow': 0, // no default eslint check due to the rule below
-    '@typescript-eslint/no-shadow': 2, // this is checked with typescript plugin
+    'no-shadow': 2,
+    '@typescript-eslint/no-shadow': 0,
     'no-console': ['error', { allow: ['warn', 'error'] }], // only console.log is restricted
     '@typescript-eslint/no-explicit-any': 0, // we try not to use "any"
     'prettier/prettier': 0, // prettier formatting applied with the lint-staged command and in IDE
@@ -27,7 +27,7 @@ module.exports = {
     {
       files: ['*.js'],
       rules: {
-        '@typescript-eslint/no-var-requires': 'off',
+        '@typescript-eslint/no-require-imports': 'off',
       },
     },
   ],

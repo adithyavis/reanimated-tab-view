@@ -1,6 +1,14 @@
 # <img src="./assets/logo.svg" alt="Reanimated Tab View Logo" width="25" height="25" style="margin: 0 0 -3px 0;" /> Reanimated Tab View
 
 <p align="center">
+  <a href="https://www.npmjs.com/package/reanimated-tab-view"><img alt="npm version" src="https://img.shields.io/npm/v/reanimated-tab-view?style=flat-square" /></a>
+  <a href="https://www.npmjs.com/package/reanimated-tab-view"><img alt="npm downloads per week" src="https://img.shields.io/npm/dw/reanimated-tab-view?style=flat-square" /></a>
+  <a href="https://www.npmjs.com/package/reanimated-tab-view"><img alt="license" src="https://img.shields.io/npm/l/reanimated-tab-view?style=flat-square" /></a>
+  <a href="https://www.npmjs.com/package/reanimated-tab-view"><img alt="types included" src="https://img.shields.io/badge/types-included-blue?style=flat-square" /></a>
+  <a href="https://expo.io/"><img alt="runs with expo" src="https://img.shields.io/badge/Runs%20with%20Expo-4630EB.svg?style=flat-square&logo=EXPO&labelColor=f3f3f3&logoColor=000" /></a>
+</p>
+
+<p align="center">
   <img src="./assets/tab-view-animation.svg" alt="Reanimated Tab View" width="150" />
 </p>
 
@@ -89,9 +97,9 @@ Additionally, reanimated-tab-view also provides the following features
 
 You can also refer to https://adithyavis.github.io/reanimated-tab-view/docs/installation.
 
-Install react-native-reanimated (>=2.x) and react-native-gesture-handler (>=2.x).
+Install react-native-reanimated (>=4.x), react-native-worklets (>=0.4.x) and react-native-gesture-handler (>=2.x). Reanimated 4 runs on the New Architecture only, so your app must have it enabled.
 
-- https://docs.swmansion.com/react-native-reanimated/docs/2.x/fundamentals/installation
+- https://docs.swmansion.com/react-native-reanimated/docs/fundamentals/getting-started
 - https://docs.swmansion.com/react-native-gesture-handler/docs/fundamentals/installation
 
 Open a Terminal in the project root and run:

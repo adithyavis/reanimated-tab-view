@@ -13,12 +13,13 @@ type TabProps = {
   style?: StyleProp<ViewStyle>;
   onTabPress?: (scene: Scene) => void;
   onTabLongPress?: (scene: Scene) => void;
+  children?: React.ReactNode;
 };
 const Tab: React.FC<TabProps> = React.memo(
   ({ index, route, style, children, onTabPress, onTabLongPress }) => {
     const { jumpTo } = useInternalContext();
 
-    const { handleTabLayout } = useHandleTabLayout(index);
+    const { tabRef, handleTabLayout } = useHandleTabLayout(index);
 
     const handlePressTabItem = useCallback(() => {
       const scene = { route };
@@ -33,6 +34,7 @@ const Tab: React.FC<TabProps> = React.memo(
 
     return (
       <AnimatedPressable
+        ref={tabRef}
         onLayout={handleTabLayout}
         onPress={handlePressTabItem}
         onLongPress={handleLongPressTabItem}

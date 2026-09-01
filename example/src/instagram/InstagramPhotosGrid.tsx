@@ -42,7 +42,7 @@ const InstagramPhoto = React.memo(({ item }: { item: Photo }) => {
 });
 
 const photos: Photo[] = Array.from({ length: 500 }, (_, index) => {
-  const randomIndex = index % 5;
+  const randomIndex = index % 50;
   return {
     url: `https://picsum.photos/100/180?random=${randomIndex}`,
   };

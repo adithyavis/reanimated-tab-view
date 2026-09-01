@@ -7,6 +7,7 @@ import { CustomView } from './basicComponents/CustomView';
 import { ProfileDescription } from './ProfileDescription';
 import { ProfileActionButtons } from './ProfileActionButtons';
 import { ProfileHighlights } from './ProfileHighlights';
+import MainProfilePic from './assets/MainProfilePic.jpg';
 
 export const HEADER_HEIGHT = 250;
 
@@ -15,7 +16,7 @@ export const InstagramHeader = () => {
     <CustomView style={styles.header}>
       <CustomView style={styles.profileDetailsContainer}>
         <View style={styles.profileImageContainer}>
-          <ProfileImage imageUrl={require('./assets/MainProfilePic.jpg')} />
+          <ProfileImage imageUrl={MainProfilePic} />
           <ProfileStats />
         </View>
         <ProfileDescription />

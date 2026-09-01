@@ -18,7 +18,7 @@ const features = [
   {
     title: 'Smooth Animations',
     description:
-      'Powered by Reanimated 3 and Gesture Handler for buttery smooth 60fps animations and gestures.',
+      'Powered by Reanimated 4 and Gesture Handler for buttery smooth 60fps animations and gestures.',
   },
   {
     title: 'Customizable Tab Bar',

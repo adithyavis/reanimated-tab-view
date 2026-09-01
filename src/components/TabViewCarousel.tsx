@@ -20,7 +20,7 @@ import {
 } from '../providers/Carousel';
 import { Scene } from './Scene';
 import { SceneRendererContextProvider } from '../providers/SceneRenderer';
-import type { LayoutChangeEvent } from 'react-native';
+import { useLayout } from '../hooks/useLayout';
 
 export type CarouselImperativeHandle = {
   jumpToRoute: (route: string) => void;
@@ -76,20 +76,14 @@ const TabViewCarouselWithoutProviders = React.memo(
       [currentRouteIndex, setCurrentRouteIndex, keyboardDismissMode]
     );
 
-    const onTabViewCarouselLayout = useCallback(
-      ({ nativeEvent }: LayoutChangeEvent) => {
-        const { width, height } = nativeEvent.layout;
-        setTabViewCarouselLayout((prevLayout) => ({
-          ...prevLayout,
-          width,
-          height,
-        }));
-      },
-      [setTabViewCarouselLayout]
-    );
     //#endregion
 
     //#region hooks
+    const {
+      ref: tabViewCarouselContainerRef,
+      onLayout: onTabViewCarouselLayout,
+    } = useLayout<View>(setTabViewCarouselLayout);
+
     const { isLazyLoadingEnabled, handleSceneMount, computeShouldRenderRoute } =
       useCarouselLazyLoading();
 
@@ -117,6 +111,7 @@ const TabViewCarouselWithoutProviders = React.memo(
     return (
       <GestureDetector gesture={swipePanGesture}>
         <View
+          ref={tabViewCarouselContainerRef}
           style={[styles.container, tabViewCarouselStyle]}
           onLayout={onTabViewCarouselLayout}
         >

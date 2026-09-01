@@ -1,12 +1,14 @@
-import { scrollTo, useAnimatedReaction } from 'react-native-reanimated';
+import Animated, {
+  scrollTo,
+  useAnimatedReaction,
+  type AnimatedRef,
+} from 'react-native-reanimated';
 import { useHeaderContext } from '../../providers/Header';
 import { useSceneRendererContext } from '../../providers/SceneRenderer';
 import { GestureSource } from '../../constants/scrollable';
 
 export const useSyncScrollWithPanTranslation = (
-  scrollRef: React.RefObject<
-    React.Component<Record<string, any>, Record<string, any>, any>
-  >
+  scrollRef: AnimatedRef<Animated.ScrollView>
 ) => {
   const { animatedTranslateYSV, gestureSourceSV, translateYBoundsUpperSV } =
     useHeaderContext();

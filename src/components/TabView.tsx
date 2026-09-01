@@ -13,7 +13,6 @@ import TabViewCarousel, {
   type CarouselImperativeHandle,
 } from './TabViewCarousel';
 import { type TabViewMethods, type TabViewProps } from '../types/TabView';
-import type { LayoutChangeEvent } from 'react-native';
 import type { Layout } from '../types/common';
 import { TabBar } from './TabBar';
 import { TabLayoutContextProvider } from '../providers/TabLayout';
@@ -29,6 +28,7 @@ import { HeaderContextProvider } from '../providers/Header';
 import { useGestureContentTranslateYStyle } from '../hooks/scrollable/useGestureContentTranslateYStyle';
 import { useScrollLikePanGesture } from '../hooks/scrollable/useScrollLikePanGesture';
 import { SHOULD_RENDER_ABSOLUTE_HEADER } from '../constants/scrollable';
+import { useLayout } from '../hooks/useLayout';
 
 export const TabViewWithoutProviders = React.memo(() => {
   //#region context
@@ -62,20 +62,9 @@ export const TabViewWithoutProviders = React.memo(() => {
 
   //#region hooks
   useHandleIndexChange();
-  //#endregion
 
-  //#region callbacks
-  const onTabViewLayout = useCallback(
-    ({ nativeEvent }: LayoutChangeEvent) => {
-      const { width, height } = nativeEvent.layout;
-      setTabViewLayout((prevLayout) => ({
-        ...prevLayout,
-        width,
-        height,
-      }));
-    },
-    [setTabViewLayout]
-  );
+  const { ref: tabViewRef, onLayout: onTabViewLayout } =
+    useLayout<View>(setTabViewLayout);
   //#endregion
 
   //#region render memos
@@ -104,6 +93,7 @@ export const TabViewWithoutProviders = React.memo(() => {
     <>
       {SHOULD_RENDER_ABSOLUTE_HEADER ? (
         <View
+          ref={tabViewRef}
           style={[styles.container, containerLayoutStyle]}
           onLayout={onTabViewLayout}
         >
@@ -121,6 +111,7 @@ export const TabViewWithoutProviders = React.memo(() => {
       ) : (
         <GestureDetector gesture={scrollLikePanGesture}>
           <View
+            ref={tabViewRef}
             style={[styles.container, containerLayoutStyle]}
             onLayout={onTabViewLayout}
           >

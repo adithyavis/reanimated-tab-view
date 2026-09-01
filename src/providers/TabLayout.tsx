@@ -5,7 +5,7 @@ import type {
   RouteIndexToTabOffsetMap,
   RouteIndexToTabWidthMap,
 } from '../types/TabBar';
-import { noop } from '../constants/common';
+import { noop, noopSharedValue } from '../constants/common';
 
 type TabLayoutContext = {
   routeIndexToTabContentWidthMap: RouteIndexToTabContentWidthMap;
@@ -20,12 +20,13 @@ type TabLayoutContext = {
 const TabLayoutContext = createContext<TabLayoutContext>({
   routeIndexToTabContentWidthMap: {},
   setRouteIndexToTabContentWidthMap: noop,
-  routeIndexToTabWidthMapSV: { value: {} },
-  routeIndexToTabOffsetMapSV: { value: {} },
-  routeIndexToTabContentWidthMapSV: { value: {} },
+  routeIndexToTabWidthMapSV: noopSharedValue<RouteIndexToTabWidthMap>({}),
+  routeIndexToTabOffsetMapSV: noopSharedValue<RouteIndexToTabOffsetMap>({}),
+  routeIndexToTabContentWidthMapSV:
+    noopSharedValue<RouteIndexToTabContentWidthMap>({}),
 });
 
-export const TabLayoutContextProvider: React.FC = React.memo(
+export const TabLayoutContextProvider = React.memo<React.PropsWithChildren>(
   function TabLayoutContextProvider({ children }) {
     const [routeIndexToTabContentWidthMap, setRouteIndexToTabContentWidthMap] =
       useState({});

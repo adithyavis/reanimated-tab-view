@@ -1,20 +1,20 @@
 import { useCallback } from 'react';
 import { useTabLayoutContext } from '../providers/TabLayout';
 import { runOnJS, runOnUI } from 'react-native-reanimated';
-import type { LayoutChangeEvent } from 'react-native';
+import type { View } from 'react-native';
 import { useInternalContext } from '../providers/Internal';
+import { useMeasuredLayout, type MeasuredLayout } from './useMeasuredLayout';
 
 export const useHandleTabLayout = (index: number) => {
   const { noOfRoutes } = useInternalContext();
   const { routeIndexToTabWidthMapSV, routeIndexToTabOffsetMapSV } =
     useTabLayoutContext();
 
-  const handleTabLayout = useCallback(
-    ({ nativeEvent }: LayoutChangeEvent) => {
+  const applyTabLayout = useCallback(
+    ({ width }: MeasuredLayout) => {
       function updateTabWidthAndOffset() {
         'worklet';
 
-        const { width } = nativeEvent.layout;
         const prevWidth = routeIndexToTabWidthMapSV.value[index] ?? 0;
         if (width !== prevWidth) {
           routeIndexToTabWidthMapSV.value = {
@@ -39,7 +39,11 @@ export const useHandleTabLayout = (index: number) => {
     },
     [routeIndexToTabWidthMapSV, index, noOfRoutes, routeIndexToTabOffsetMapSV]
   );
-  return { handleTabLayout };
+
+  const { ref: tabRef, onLayout: handleTabLayout } =
+    useMeasuredLayout<View>(applyTabLayout);
+
+  return { tabRef, handleTabLayout };
 };
 
 export const useHandleTabContentLayout = (index: number) => {
@@ -58,12 +62,11 @@ export const useHandleTabContentLayout = (index: number) => {
     [index, setRouteIndexToTabContentWidthMap]
   );
 
-  const handleTabContentLayout = useCallback(
-    ({ nativeEvent }: LayoutChangeEvent) => {
+  const applyTabContentLayout = useCallback(
+    ({ width }: MeasuredLayout) => {
       function updateTabContentWidthAndOffset() {
         'worklet';
 
-        const { width } = nativeEvent.layout;
         const prevWidth = routeIndexToTabContentWidthMapSV.value[index] ?? 0;
         if (width !== prevWidth) {
           routeIndexToTabContentWidthMapSV.value = {
@@ -77,5 +80,9 @@ export const useHandleTabContentLayout = (index: number) => {
     },
     [index, routeIndexToTabContentWidthMapSV, updateTabContentWidthMap]
   );
-  return { handleTabContentLayout };
+
+  const { ref: tabContentRef, onLayout: handleTabContentLayout } =
+    useMeasuredLayout<View>(applyTabContentLayout);
+
+  return { tabContentRef, handleTabContentLayout };
 };

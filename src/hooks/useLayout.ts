@@ -1,21 +1,21 @@
-import { useCallback, useState } from 'react';
-import type { LayoutChangeEvent } from 'react-native';
+import { useCallback, type Dispatch, type SetStateAction } from 'react';
+import type { NativeMethods } from 'react-native';
+import type { Layout } from '../types/common';
+import { useMeasuredLayout, type MeasuredLayout } from './useMeasuredLayout';
 
-export function useLayout() {
-  const [layout, setLayout] = useState({
-    x: 0,
-    y: 0,
-    width: 0,
-    height: 0,
-  });
+export function useLayout<T extends NativeMethods>(
+  setLayout: Dispatch<SetStateAction<Layout>>
+) {
+  const applyLayout = useCallback(
+    ({ width, height }: MeasuredLayout) => {
+      setLayout((prevLayout) =>
+        prevLayout.width === width && prevLayout.height === height
+          ? prevLayout
+          : { ...prevLayout, width, height }
+      );
+    },
+    [setLayout]
+  );
 
-  const onLayout = useCallback(({ nativeEvent }: LayoutChangeEvent) => {
-    const { x, y, width, height } = nativeEvent.layout;
-    setLayout((prevLayout) => ({ ...prevLayout, x, y, width, height }));
-  }, []);
-
-  return {
-    onLayout,
-    ...layout,
-  };
+  return useMeasuredLayout<T>(applyLayout);
 }

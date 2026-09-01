@@ -13,7 +13,6 @@ import type {
 } from '../types/common';
 import type { ViewStyle } from 'react-native';
 import type { StyleProp } from 'react-native';
-import { noop } from '../constants/common';
 import type { TabBarProps } from '../types';
 import { SCROLLABLE_TAB_WIDTH } from '../constants/tabBar';
 import type { SharedValue } from 'react-native-reanimated';
@@ -69,7 +68,7 @@ const PropsContext = createContext<PropsContext>({
   keyboardDismissMode: undefined,
   renderTabBar: undefined,
   providedAnimatedRouteIndexSV: undefined,
-  renderScene: noop,
+  renderScene: () => null,
   renderHeader: undefined,
   onSwipeEnd: undefined,
   onSwipeStart: undefined,

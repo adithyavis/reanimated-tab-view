@@ -6,6 +6,7 @@ import { useJumpContext } from '../providers/Jump';
 
 type SceneWrapperProps = {
   routeIndex: number;
+  children?: React.ReactNode;
 };
 
 const SceneWrapper: React.FC<SceneWrapperProps> = React.memo(

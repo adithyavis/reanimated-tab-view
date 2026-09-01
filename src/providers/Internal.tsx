@@ -2,10 +2,10 @@ import React, { createContext, useContext } from 'react';
 import type { SharedValue } from 'react-native-reanimated';
 import type { CarouselImperativeHandle } from '../components/TabViewCarousel';
 import type { Layout, Route } from '../types/common';
-import { noop } from '../constants/common';
+import { noop, noopSharedValue } from '../constants/common';
 
 type InternalContext = {
-  tabViewCarouselRef: React.RefObject<CarouselImperativeHandle>;
+  tabViewCarouselRef: React.RefObject<CarouselImperativeHandle | null>;
   animatedRouteIndex: SharedValue<number>;
   initialRouteIndex: number;
   currentRouteIndex: number;
@@ -25,7 +25,7 @@ type InternalContext = {
 
 const InternalContext = createContext<InternalContext>({
   tabViewCarouselRef: { current: null },
-  animatedRouteIndex: { value: 0 },
+  animatedRouteIndex: noopSharedValue(0),
   initialRouteIndex: 0,
   currentRouteIndex: 0,
   routes: [],
