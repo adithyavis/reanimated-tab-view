@@ -121,17 +121,20 @@
     },
     "git": {
       "commitMessage": "chore: release ${version}",
-      "tagName": "v${version}"
+      "tagName": "v${version}",
+      "tagMatch": "v0.*"
     },
     "npm": {
-      "publish": true
+      "publish": true,
+      "tag": "legacy"
     },
     "github": {
-      "release": true
+      "release": false
     },
     "plugins": {
       "@release-it/conventional-changelog": {
-        "preset": "angular"
+        "preset": "angular",
+        "ignoreRecommendedBump": true
       }
     }
   },
