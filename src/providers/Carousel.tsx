@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useMemo } from 'react';
+import React, { createContext, useContext, useEffect, useMemo } from 'react';
 import { useInternalContext } from './Internal';
 import { useSharedValue, type SharedValue } from 'react-native-reanimated';
 import { usePropsContext } from './Props';
@@ -35,6 +35,17 @@ export const CarouselContextProvider = React.memo(
 
     const currentRouteIndexSV = useSharedValue(initialRouteIndex);
     //endregion
+
+    //#region effects
+    useEffect(() => {
+      swipeTranslationXSV.value =
+        -currentRouteIndexSV.value * translationPerSceneContainer;
+    }, [
+      translationPerSceneContainer,
+      swipeTranslationXSV,
+      currentRouteIndexSV,
+    ]);
+    //#endregion
 
     const value = useMemo(
       () => ({
