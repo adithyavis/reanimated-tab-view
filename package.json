@@ -1,6 +1,6 @@
 {
   "name": "reanimated-tab-view",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "Tab view component implemented using Reanimated 3",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
