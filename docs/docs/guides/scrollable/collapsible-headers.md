@@ -39,10 +39,6 @@ function MyTabView() {
       renderScene={renderScene}
       renderHeader={renderHeader}
       onIndexChange={setIndex}
-      initialLayout={{
-        tabView: { width: layout.width },
-        tabViewHeader: { height: 200 },
-      }}
     />
   );
 }
@@ -105,20 +101,6 @@ const PostsTab = () => (
     keyExtractor={(item) => item.id}
   />
 );
-```
-
-## Reducing initial jitter
-
-Pass `initialLayout` with `tabViewHeader` dimensions to avoid layout jitter during the first render:
-
-```tsx
-<TabView
-  initialLayout={{
-    tabView: { width: screenWidth },
-    tabViewHeader: { width: screenWidth, height: 200 },
-  }}
-  // ...other props
-/>
 ```
 
 ## Platform support

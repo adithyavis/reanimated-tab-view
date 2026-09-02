@@ -4,27 +4,6 @@ sidebar_position: 1
 
 # Common Issues
 
-## Layout jitter on initial render
-
-**Symptom:** The tab view or header flickers/jitters when first rendered.
-
-**Cause:** The component uses `onLayout` to measure dimensions asynchronously. Until measurements complete, the layout may shift.
-
-**Solution:** Pass `initialLayout` with known dimensions:
-
-```tsx
-const layout = useWindowDimensions();
-
-<TabView
-  initialLayout={{
-    tabView: { width: layout.width },
-    tabViewHeader: { height: 200 }, // your header height
-    tabBar: { height: 48 },
-  }}
-  // ...other props
-/>
-```
-
 ## GestureHandlerRootView missing
 
 **Symptom:** Gestures don't work, swipe between tabs fails, or you see a gesture handler error.

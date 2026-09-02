@@ -26,7 +26,7 @@ import { TabView } from 'reanimated-tab-view';
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `initialLayout` | `object` | `undefined` | Initial layout dimensions to reduce jitter. See below. |
+| `initialLayout` | `object` | `undefined` | Optional. Seeds the dimensions used on the first render. See below. |
 | `tabBarConfig` | `TabBarConfig` | `undefined` | Configuration for the tab bar. See below. |
 | `renderHeader` | `(props: HeaderRendererProps) => ReactNode` | `undefined` | Renders a collapsible header above the tab bar. |
 | `renderMode` | `'all' \| 'windowed' \| 'lazy'` | `'all'` | Controls how scenes are rendered. |
@@ -43,7 +43,7 @@ import { TabView } from 'reanimated-tab-view';
 
 ### initialLayout
 
-Object to provide initial dimensions and reduce layout jitter:
+The tab view measures its header, tab bar and carousel synchronously before the first paint, so this prop is optional. Pass it when you already know the dimensions and want to skip the extra render that the first measurement would otherwise trigger:
 
 ```tsx
 initialLayout?: {
@@ -61,7 +61,7 @@ Configuration object for the tab bar, passed via the `tabBarConfig` prop:
 |------|------|---------|-------------|
 | `tabBarPosition` | `'top' \| 'bottom'` | `'top'` | Position of the tab bar. |
 | `tabBarType` | `'primary' \| 'secondary'` | `'secondary'` | Type of tab bar per Material Design spec. |
-| `tabBarScrollEnabled` | `boolean` | `true` | Enables scrollable tab bar. |
+| `tabBarScrollEnabled` | `boolean` | `false` | Enables scrollable tab bar. |
 | `tabBarDynamicWidthEnabled` | `boolean` | `true` for primary, `false` for secondary | Enables dynamic tab widths based on title length. |
 | `scrollableTabWidth` | `number` | `100` | Width of each tab when `tabBarScrollEnabled` is true. |
 | `tabBarStyle` | `StyleProp<ViewStyle>` | `undefined` | Style for the tab bar container. |

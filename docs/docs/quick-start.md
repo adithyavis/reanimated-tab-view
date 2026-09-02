@@ -88,7 +88,9 @@ const renderScene = ({ route }) => {
 
 ### Initial layout
 
-Pass `initialLayout` to avoid layout jitter on first render:
+`initialLayout` is optional. The tab view measures its header, tab bar and carousel synchronously before the first paint, so the correct dimensions are already in place on the first render.
+
+Pass it when you already know the dimensions and want to skip the extra render that the first measurement would otherwise trigger:
 
 ```tsx
 <TabView
