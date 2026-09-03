@@ -6142,6 +6142,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@legendapp/list@npm:^3.3.10":
+  version: 3.3.10
+  resolution: "@legendapp/list@npm:3.3.10"
+  dependencies:
+    use-sync-external-store: ^1.5.0
+  peerDependencies:
+    react: "*"
+  peerDependenciesMeta:
+    react-dom:
+      optional: true
+    react-native:
+      optional: true
+  checksum: 2bfa3dfa6b32b48a2f56162ddf7074d09538af0c5d18a7809316d7031cd170f9205b5897323bcca56f9f3cb4ab80bd3eb9247a6770ae700419a87d4f5d40546f
+  languageName: node
+  linkType: hard
+
 "@leichtgewicht/ip-codec@npm:^2.0.1":
   version: 2.0.4
   resolution: "@leichtgewicht/ip-codec@npm:2.0.4"
@@ -6802,6 +6818,30 @@ __metadata:
   peerDependencies:
     release-it: ^18.0.0 || ^19.0.0
   checksum: cde63539d8796dde7d9671ce95c981ba62c98312386c6fc72851b3fc61e89091ac72bcbeec9b9d2b8bd234aa8db70fbd97517e31aad5f39dd64e24c8e6600460
+  languageName: node
+  linkType: hard
+
+"@shopify/flash-list@npm:2.0.2":
+  version: 2.0.2
+  resolution: "@shopify/flash-list@npm:2.0.2"
+  dependencies:
+    tslib: 2.8.1
+  peerDependencies:
+    "@babel/runtime": "*"
+    react: "*"
+    react-native: "*"
+  checksum: cfb3a6528eb123632218b68ecea881a2866d56183427a91a5454e57cd053ef28a4d40c8a6c9fc2d36ad3d1af997eaad0e4fcd632de538c3b335065cf4f3dd8dc
+  languageName: node
+  linkType: hard
+
+"@shopify/flash-list@npm:^2.3.2":
+  version: 2.3.2
+  resolution: "@shopify/flash-list@npm:2.3.2"
+  peerDependencies:
+    "@babel/runtime": "*"
+    react: "*"
+    react-native: "*"
+  checksum: d6a3ea586c6024372e7e42283db05f2ca6173ba3015e96a9e469a41f94fcd064a92059875d1cc9d14c704580d6a42791f2956d50e992203c2656489736dc6f4b
   languageName: node
   linkType: hard
 
@@ -21193,8 +21233,10 @@ __metadata:
   resolution: "reanimated-tab-view-example@workspace:example"
   dependencies:
     "@babel/core": ^7.29.7
+    "@legendapp/list": ^3.3.10
     "@react-navigation/drawer": ^7.13.10
     "@react-navigation/native": ^7.3.18
+    "@shopify/flash-list": 2.0.2
     "@types/number-to-words": ^1.2.3
     babel-plugin-module-resolver: ^5.0.3
     expo: ~57.0.12
@@ -21220,10 +21262,12 @@ __metadata:
   dependencies:
     "@commitlint/config-conventional": ^19.8.1
     "@evilmartians/lefthook": ^1.11.13
+    "@legendapp/list": ^3.3.10
     "@react-native/babel-preset": ^0.86.2
     "@react-native/eslint-config": ^0.86.2
     "@react-native/jest-preset": ^0.86.2
     "@release-it/conventional-changelog": ^10.0.1
+    "@shopify/flash-list": ^2.3.2
     "@types/jest": ^29.5.14
     "@types/react": ^19.2.18
     "@typescript-eslint/eslint-plugin": ^8.67.0
@@ -21246,11 +21290,18 @@ __metadata:
     release-it: ^19.0.5
     typescript: ^5.9.3
   peerDependencies:
+    "@legendapp/list": ">=3.0.0"
+    "@shopify/flash-list": ">=2.0.0"
     react: "*"
     react-native: "*"
     react-native-gesture-handler: ">=2.9.0"
     react-native-reanimated: ">=4.0.0"
     react-native-worklets: ">=0.4.0"
+  peerDependenciesMeta:
+    "@legendapp/list":
+      optional: true
+    "@shopify/flash-list":
+      optional: true
   languageName: unknown
   linkType: soft
 
@@ -23610,17 +23661,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"tslib@npm:2.8.1, tslib@npm:^2.6.0":
+  version: 2.8.1
+  resolution: "tslib@npm:2.8.1"
+  checksum: e4aba30e632b8c8902b47587fd13345e2827fa639e7c3121074d5ee0880723282411a8838f830b55100cbe4517672f84a2472667d355b81e8af165a55dc6203a
+  languageName: node
+  linkType: hard
+
 "tslib@npm:^2.0.1, tslib@npm:^2.0.3, tslib@npm:^2.1.0, tslib@npm:^2.4.0":
   version: 2.6.2
   resolution: "tslib@npm:2.6.2"
   checksum: 329ea56123005922f39642318e3d1f0f8265d1e7fcb92c633e0809521da75eeaca28d2cf96d7248229deb40e5c19adf408259f4b9640afd20d13aecc1430f3ad
-  languageName: node
-  linkType: hard
-
-"tslib@npm:^2.6.0":
-  version: 2.8.1
-  resolution: "tslib@npm:2.8.1"
-  checksum: e4aba30e632b8c8902b47587fd13345e2827fa639e7c3121074d5ee0880723282411a8838f830b55100cbe4517672f84a2472667d355b81e8af165a55dc6203a
   languageName: node
   linkType: hard
 
