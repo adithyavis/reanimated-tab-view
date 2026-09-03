@@ -211,9 +211,6 @@ ref methods
 
 - `jumpTo(routeKey: string)`: Jump to a specific route.
 
-## Limitations
-
-- Collapsible headers are supported on iOS and Android only. The rest of the tab view (swiping, tab bar, scene rendering) works on web.
 
 ## Author
 
