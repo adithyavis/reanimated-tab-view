@@ -16,6 +16,8 @@ A custom Tab View component implemented using [`react-native-reanimated`](https:
 
 For Docs → https://adithyavis.github.io/reanimated-tab-view/
 
+> ⚠️ **IMPORTANT:** This README and the docs linked above cover **reanimated-tab-view 1.x**, which is built on **Reanimated 4** and therefore runs on the New Architecture only. If you are still on Reanimated 3, use the **0.x** release line instead — its source lives on the [`v0.x` branch](https://github.com/adithyavis/reanimated-tab-view/tree/v0.x), and its documentation is at [0.x docs](https://adithyavis.github.io/reanimated-tab-view/docs/0.x/installation) (also reachable from the version dropdown on the docs site).
+
 ## Demo
 
 <div align="center">
@@ -62,6 +64,7 @@ Additionally, reanimated-tab-view also provides the following features
 - Collapsible headers
 
   - Currently supported on ios and android
+  - Works with `RTVScrollView`, `RTVFlatList`, `RTVFlashList` ([FlashList](https://shopify.github.io/flash-list/)) and `RTVLegendList` ([Legend List](https://www.legendapp.com/open-source/list/))
 
     <img src="./assets/collapsible_header.gif" width="360">
 
@@ -108,6 +111,15 @@ Open a Terminal in the project root and run:
 yarn add reanimated-tab-view
 ```
 
+### Optional peer dependencies
+
+Only needed if you render the matching component inside a scene. Leaving them out is fine.
+
+| Package                                                        | Version  | Needed for      |
+| -------------------------------------------------------------- | -------- | --------------- |
+| [@shopify/flash-list](https://shopify.github.io/flash-list/)    | >= 2.0.0 | `RTVFlashList`  |
+| [@legendapp/list](https://www.legendapp.com/open-source/list/)  | >= 3.0.0 | `RTVLegendList` |
+
 ## Quick Start
 
 You can also refer to https://adithyavis.github.io/reanimated-tab-view/docs/quick-start.
@@ -150,7 +162,7 @@ export default function TabViewExample() {
       navigationState={{ index, routes }}
       renderScene={renderScene}
       onIndexChange={setIndex}
-      initialLayout={{ width: layout.width }}
+      initialLayout={{ tabView: { width: layout.width } }}
     />
   );
 }
@@ -175,7 +187,7 @@ You can also refer to https://adithyavis.github.io/reanimated-tab-view/docs/api/
 | jumpMode               | Specifies the jump mode of the tab view.                                                                                                                          | No       | `'smooth'\|'scrolling'\|'no-animation'`                                                                                                                                | "smooth"  |
 | tabBarConfig           | Configuration for the tab bar.                                                                                                                                    | No       | `TabBarConfig`- For details, see below.                                                                                                                                | undefined |
 | TabViewHeaderComponent | A component to render as the tab view header.                                                                                                                     | No       | `React.ReactNode`                                                                                                                                                      | undefined |
-| renderScene            | A function that renders the scene for a given route. Use `RTVScrollView` or `RTVFlatList` in order to render collapsible headers through the `renderHeader` prop. | No       | `(props: HeaderRendererProps) => React.ReactNode`                                                                                                                      |           |
+| renderScene            | A function that renders the scene for a given route. Use `RTVScrollView`, `RTVFlatList`, `RTVFlashList` or `RTVLegendList` in order to render collapsible headers through the `renderHeader` prop. | No       | `(props: HeaderRendererProps) => React.ReactNode`                                                                                                                      |           |
 | renderHeader           | A function that renders the header for the tab view.                                                                                                              | No       | `(props: SceneRendererProps) => React.ReactNode`                                                                                                                       | undefined |
 | onIndexChange          | A function that is called when the index changes.                                                                                                                 | Yes      | `(index:number) => void`                                                                                                                                               |           |
 | onSwipeEnd             | Callback function for when a swipe gesture ends.                                                                                                                  | No       | Function                                                                                                                                                               | undefined |
@@ -187,7 +199,7 @@ tabBarConfig properties are as follows:
 | ------------------------- | -------------------------------------------------------------------------- | -------- | -------------------------------------------------------- | ----------------------------------------------------- |
 | tabBarPosition            | Specifies the position of the tab bar.                                     | No       | `'top'\|'bottom'`                                        | 'top'                                                 |
 | tabBarType                | Specifies the type of the tab bar, according to the Material Design spec.  | No       | `'primary'\|'secondary'`                                 | 'secondary'                                           |
-| tabBarScrollEnabled       | Enables or disables scrollable tab bar.                                    | No       | Boolean                                                  | true                                                  |
+| tabBarScrollEnabled       | Enables or disables scrollable tab bar.                                    | No       | Boolean                                                  | false                                                 |
 | tabBarDynamicWidthEnabled | Enables dynamic width for tabs.                                            | No       | Boolean                                                  | true for primary tab bar, false for secondary tab bar |
 | scrollableTabWidth        | The width of each tab. Applicable ONLY when `tabBarScrollEnabled` is true. | No       | Number                                                   | 100                                                   |
 | tabBarStyle               | Used to modify the style for the tab bar.                                  | No       | `StyleProp<ViewStyle>`                                   | undefined                                             |
@@ -199,9 +211,9 @@ ref methods
 
 - `jumpTo(routeKey: string)`: Jump to a specific route.
 
-## Limitiations
+## Limitations
 
-- This project heavily uses `onLayout` method to measure layouts of header, tabBar etc. Since the measurements are done asynchronously, one can see jitters during initial render. To avoid this, pass appropriate values to the initialLayout prop.
+- Collapsible headers are supported on iOS and Android only. The rest of the tab view (swiping, tab bar, scene rendering) works on web.
 
 ## Author
 
