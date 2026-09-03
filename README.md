@@ -214,7 +214,7 @@ ref methods
 
 ## Author
 
-- [Adithya Viswamithiran](https://github.com/adithyavis/)
+- [Adithya Viswamithiran](https://adithyavis.github.io/)
 
 ## License
 
