@@ -60,10 +60,12 @@
   "devDependencies": {
     "@commitlint/config-conventional": "^19.8.1",
     "@evilmartians/lefthook": "^1.11.13",
+    "@legendapp/list": "^3.3.10",
     "@react-native/babel-preset": "^0.86.2",
     "@react-native/eslint-config": "^0.86.2",
     "@react-native/jest-preset": "^0.86.2",
     "@release-it/conventional-changelog": "^10.0.1",
+    "@shopify/flash-list": "^2.3.2",
     "@types/jest": "^29.5.14",
     "@types/react": "^19.2.18",
     "@typescript-eslint/eslint-plugin": "^8.67.0",
@@ -90,11 +92,21 @@
     "@types/react": "^19.2.18"
   },
   "peerDependencies": {
+    "@legendapp/list": ">=3.0.0",
+    "@shopify/flash-list": ">=2.0.0",
     "react": "*",
     "react-native": "*",
     "react-native-gesture-handler": ">=2.9.0",
     "react-native-reanimated": ">=4.0.0",
     "react-native-worklets": ">=0.4.0"
+  },
+  "peerDependenciesMeta": {
+    "@legendapp/list": {
+      "optional": true
+    },
+    "@shopify/flash-list": {
+      "optional": true
+    }
   },
   "workspaces": [
     "example",
