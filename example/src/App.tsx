@@ -6,6 +6,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { BasicScreen } from './screens/BasicScreen';
 import { InstagramScreen } from './screens/InstagramScreen';
+import { FlashListScreen } from './screens/FlashListScreen';
+import { LegendListScreen } from './screens/LegendListScreen';
 
 const Drawer = createDrawerNavigator();
 
@@ -21,6 +23,8 @@ export default function App() {
         >
           <Drawer.Screen name="Basic" component={BasicScreen} />
           <Drawer.Screen name="Instagram" component={InstagramScreen} />
+          <Drawer.Screen name="FlashList" component={FlashListScreen} />
+          <Drawer.Screen name="LegendList" component={LegendListScreen} />
         </Drawer.Navigator>
       </NavigationContainer>
     </GestureHandlerRootView>
