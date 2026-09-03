@@ -52,16 +52,45 @@ type Item = { id: string; title: string };
 />
 ```
 
+## RTVFlashList and RTVLegendList
+
+If your scenes render [FlashList](https://shopify.github.io/flash-list/) or [Legend List](https://www.legendapp.com/open-source/list/) instead of `FlatList`, use `RTVFlashList` or `RTVLegendList`:
+
+```tsx
+import { RTVFlashList, RTVLegendList } from 'reanimated-tab-view';
+
+const MyFlashListTab = () => (
+  <RTVFlashList
+    data={items}
+    renderItem={({ item }) => <ItemCard item={item} />}
+    keyExtractor={(item) => item.id}
+  />
+);
+
+const MyLegendListTab = () => (
+  <RTVLegendList
+    data={items}
+    renderItem={({ item }) => <ItemCard item={item} />}
+    keyExtractor={(item) => item.id}
+    recycleItems
+  />
+);
+```
+
+Both accept every prop of the list they wrap, and both support generic typing the same way `RTVFlatList` does.
+
+`@shopify/flash-list` (v2+) and `@legendapp/list` (v3+) are **optional** peer dependencies. Install whichever one you use; you do not need either if your scenes only use `RTVScrollView` or `RTVFlatList`. Rendering `RTVFlashList` or `RTVLegendList` without its package installed throws an error telling you which package to add.
+
 ## When to use these components
 
 | Scenario | Component to use |
 |----------|-----------------|
-| Tab view **with** collapsible header | `RTVScrollView` or `RTVFlatList` (required) |
-| Tab view **without** collapsible header | Standard `ScrollView` or `FlatList` (works fine) |
+| Tab view **with** collapsible header | `RTVScrollView`, `RTVFlatList`, `RTVFlashList` or `RTVLegendList` (required) |
+| Tab view **without** collapsible header | Standard `ScrollView`, `FlatList`, `FlashList` or `LegendList` (works fine) |
 
 ## Scroll event handlers
 
-Both `RTVScrollView` and `RTVFlatList` support scroll event callbacks:
+All of the `RTV*` scrollable components support scroll event callbacks:
 
 ```tsx
 <RTVScrollView
