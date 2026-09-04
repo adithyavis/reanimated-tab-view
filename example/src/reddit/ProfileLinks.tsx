@@ -2,9 +2,9 @@ import React from 'react';
 import { Image, Pressable, StyleSheet, View } from 'react-native';
 import { CustomText } from './basicComponents/CustomText';
 import { ChevronRightIcon } from './assets/RedditIcons';
-import volcano from './assets/achievements/16itpg51vs1d1.webp';
-import meteor from './assets/achievements/mhy48431vs1d1.webp';
-import sun from './assets/achievements/xwfmnf31vs1d1.webp';
+import volcano from './assets/achievements/1.webp';
+import meteor from './assets/achievements/2.webp';
+import sun from './assets/achievements/3.webp';
 import { profile } from './profile';
 import { colors } from './theme';
 
