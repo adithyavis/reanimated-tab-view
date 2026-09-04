@@ -10,7 +10,7 @@ const ART_DROP = 0.045;
 
 const ART_NUDGE = 0.02;
 
-const BACKDROP = '#2A9D8F';
+const BACKDROP = '#4b4b4b';
 
 type ProfileAvatarProps = {
   size?: number;
@@ -28,6 +28,19 @@ export const ProfileAvatar = ({
         { width: size, height: size, borderRadius: size / 2 },
       ]}
     >
+      <View
+        style={[
+          styles.bg,
+          {
+            width: width / 1.25,
+            height: width / 1.25,
+            borderRadius: width / 1.25,
+            left: width / 5,
+            top: width / 4,
+          },
+        ]}
+      />
+
       <Image
         source={avatar}
         style={{
@@ -45,6 +58,9 @@ export const ProfileAvatar = ({
 const styles = StyleSheet.create({
   crop: {
     overflow: 'hidden',
+  },
+  bg: {
+    position: 'absolute',
     backgroundColor: BACKDROP,
   },
 });
