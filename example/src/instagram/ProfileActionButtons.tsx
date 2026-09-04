@@ -1,16 +1,21 @@
 import React from 'react';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { CustomText } from './basicComponents/CustomText';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { colors, metrics } from './theme';
+
+const ACTIONS = ['Edit profile', 'Share profile'];
 
 export const ProfileActionButtons = () => {
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={[styles.button, styles.primaryButton]}>
-        <CustomText style={styles.text}>Follow</CustomText>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.button}>
-        <CustomText style={styles.text}>Message</CustomText>
-      </TouchableOpacity>
+      {ACTIONS.map((action) => (
+        <Pressable
+          key={action}
+          style={({ pressed }) => [styles.button, pressed && styles.pressed]}
+        >
+          <CustomText style={styles.label}>{action}</CustomText>
+        </Pressable>
+      ))}
     </View>
   );
 };
@@ -18,20 +23,22 @@ export const ProfileActionButtons = () => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    gap: 20,
-    paddingVertical: 10,
+    gap: 8,
+    marginTop: 14,
   },
   button: {
-    paddingVertical: 5,
-    borderRadius: 10,
     flex: 1,
-    backgroundColor: 'rgb(96, 96, 96)',
+    height: metrics.actionButtonHeight,
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.surface,
   },
-  primaryButton: {
-    backgroundColor: 'rgb(101, 126, 223)',
+  pressed: {
+    opacity: 0.7,
   },
-  text: {
-    textAlign: 'center',
+  label: {
+    fontSize: 13,
+    fontWeight: '600',
   },
 });
