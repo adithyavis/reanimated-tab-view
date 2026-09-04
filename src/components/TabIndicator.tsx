@@ -61,6 +61,7 @@ const TabIndicator = React.memo((props: TabIndicatorProps) => {
 
   return (
     <Animated.View
+      pointerEvents="none"
       style={[styles.tabIndicatorContainer, animatedTabIndicatorContainerStyle]}
     >
       <Animated.View

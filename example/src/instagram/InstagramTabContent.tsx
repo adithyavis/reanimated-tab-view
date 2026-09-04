@@ -1,74 +1,103 @@
 import React, { useMemo } from 'react';
-import { StyleSheet, type ViewProps } from 'react-native';
+import { StyleSheet } from 'react-native';
 import Animated, {
   useAnimatedStyle,
+  withTiming,
   type SharedValue,
 } from 'react-native-reanimated';
-import type { Route } from 'react-native-tab-view';
-import { VideosTab } from './assets/VideosTab';
-import { PhotosTab } from './assets/PhotosTab';
-import { TaggedTab } from './assets/TaggedTab';
+import type { Route } from 'reanimated-tab-view';
+import { GridIcon } from './assets/GridIcon';
+import { ReelsIcon } from './assets/ReelsIcon';
+import { TaggedIcon } from './assets/TaggedIcon';
+import { ChevronDownIcon } from './assets/ChromeIcons';
+import type { IconProps } from './assets/icon';
+import { colors } from './theme';
 
-const ACTIVE_COLOR = 'rgba(255, 255, 255, 1)';
-const INACTIVE_COLOR = 'rgba(255, 255, 255, 0.5)';
-
-const IconMap = {
-  videos: VideosTab,
-  photos: PhotosTab,
-  tagged: TaggedTab,
+const TAB_ICONS: Record<string, React.ComponentType<IconProps>> = {
+  posts: GridIcon,
+  reels: ReelsIcon,
+  tagged: TaggedIcon,
 };
 
-type InstagramTabContentProps = ViewProps & {
+type InstagramTabContentProps = {
   activePercentage: SharedValue<number>;
   route: Route;
+
+  isSortMenuOpen: boolean;
 };
 
 export const InstagramTabContent = React.memo<InstagramTabContentProps>(
-  (props) => {
-    const { activePercentage, route, style } = props;
+  ({ activePercentage, route, isSortMenuOpen }) => {
+    const Icon = TAB_ICONS[route.key] ?? GridIcon;
 
-    const Icon = IconMap[route.key as keyof typeof IconMap];
+    const activeIconStyle = useAnimatedStyle(
+      () => ({ opacity: Math.max(0, 1 - activePercentage.value / 100) }),
+      [activePercentage]
+    );
 
-    const animatedActiveLabelStyle = useAnimatedStyle(() => {
-      return {
-        opacity: Math.max(0, 1 - activePercentage.value / 100),
-      };
-    }, [activePercentage]);
+    const inactiveIconStyle = useAnimatedStyle(
+      () => ({ opacity: activePercentage.value / 100 }),
+      [activePercentage]
+    );
 
-    const animatedInactiveLabelStyle = useAnimatedStyle(() => {
-      return {
-        opacity: activePercentage.value / 100,
-      };
-    }, [activePercentage]);
+    const chevronStyle = useAnimatedStyle(
+      () => ({
+        transform: [{ rotate: withTiming(isSortMenuOpen ? '180deg' : '0deg') }],
+      }),
+      [isSortMenuOpen]
+    );
 
-    const activeLabel = useMemo(() => {
-      return (
-        <Animated.View style={[animatedActiveLabelStyle, style]}>
-          <Icon stroke={ACTIVE_COLOR} />
+    const activeIcon = useMemo(
+      () => (
+        <Animated.View style={activeIconStyle}>
+          <Icon
+            filled
+            color={colors.textPrimary}
+            backgroundColor={colors.background}
+          />
         </Animated.View>
-      );
-    }, [Icon, animatedActiveLabelStyle, style]);
-    const inactiveLabel = useMemo(() => {
-      return (
-        <Animated.View
-          style={[styles.inactiveLabel, animatedInactiveLabelStyle]}
-        >
-          <Icon stroke={INACTIVE_COLOR} />
+      ),
+      [Icon, activeIconStyle]
+    );
+
+    const inactiveIcon = useMemo(
+      () => (
+        <Animated.View style={[styles.inactiveIcon, inactiveIconStyle]}>
+          <Icon color={colors.iconInactive} />
         </Animated.View>
-      );
-    }, [Icon, animatedInactiveLabelStyle]);
+      ),
+      [Icon, inactiveIconStyle]
+    );
 
     return (
       <>
-        {activeLabel}
-        {inactiveLabel}
+        {activeIcon}
+        {inactiveIcon}
+        {route.key === 'reels' && (
+          <Animated.View style={[styles.chevron, activeIconStyle]}>
+            <Animated.View style={chevronStyle}>
+              <ChevronDownIcon
+                size={14}
+                strokeWidth={2.6}
+                color={colors.textPrimary}
+              />
+            </Animated.View>
+          </Animated.View>
+        )}
       </>
     );
   }
 );
 
 const styles = StyleSheet.create({
-  inactiveLabel: {
+  inactiveIcon: {
     position: 'absolute',
+  },
+  chevron: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    right: 0,
+    justifyContent: 'center',
   },
 });

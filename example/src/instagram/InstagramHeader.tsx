@@ -1,43 +1,55 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import { ProfileImage } from './ProfileImage';
+import { NoteBubble } from './NoteBubble';
+import { ProfileAvatar } from './ProfileAvatar';
 import { ProfileStats } from './ProfileStats';
-import { CustomView } from './basicComponents/CustomView';
-import { ProfileDescription } from './ProfileDescription';
+import { ProfileBio } from './ProfileBio';
 import { ProfileActionButtons } from './ProfileActionButtons';
-import { ProfileHighlights } from './ProfileHighlights';
-import MainProfilePic from './assets/MainProfilePic.jpg';
+import { profile } from './profile';
+import { colors, metrics } from './theme';
 
-export const HEADER_HEIGHT = 250;
+export const HEADER_HEIGHT = 222;
+
+const AVATAR_URI = `https://picsum.photos/id/${profile.avatarId}/200/200`;
+
+const NOTE_OVERHANG = 22;
 
 export const InstagramHeader = () => {
   return (
-    <CustomView style={styles.header}>
-      <CustomView style={styles.profileDetailsContainer}>
-        <View style={styles.profileImageContainer}>
-          <ProfileImage imageUrl={MainProfilePic} />
-          <ProfileStats />
+    <View style={styles.header}>
+      <View style={styles.identityRow}>
+        <View style={styles.avatarColumn}>
+          <NoteBubble text={profile.notePrompt} style={styles.note} />
+          <ProfileAvatar uri={AVATAR_URI} showAddBadge />
         </View>
-        <ProfileDescription />
-        <ProfileActionButtons />
-      </CustomView>
-      <ProfileHighlights />
-    </CustomView>
+        <ProfileStats />
+      </View>
+      <ProfileBio />
+      <ProfileActionButtons />
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   header: {
-    height: HEADER_HEIGHT,
+    backgroundColor: colors.background,
+    paddingHorizontal: metrics.screenPadding,
+    paddingTop: 8,
+    paddingBottom: 14,
   },
-  profileDetailsContainer: {
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-  },
-  profileImageContainer: {
+  identityRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
+  },
+  avatarColumn: {
+    paddingTop: NOTE_OVERHANG,
+    marginRight: 20,
+  },
+  note: {
+    position: 'absolute',
+    top: 0,
+    alignSelf: 'center',
+    zIndex: 1,
   },
 });

@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, type ViewProps } from 'react-native';
+import { colors } from '../theme';
 
 type CustomViewProps = ViewProps;
 
@@ -13,6 +14,6 @@ export const CustomView = ({ children, style, ...props }: CustomViewProps) => {
 
 const styles = StyleSheet.create({
   view: {
-    backgroundColor: 'rgb(32, 32, 32)',
+    backgroundColor: colors.background,
   },
 });

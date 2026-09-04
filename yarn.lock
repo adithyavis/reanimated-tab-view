@@ -12519,6 +12519,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"expo-blur@npm:~57.0.2":
+  version: 57.0.2
+  resolution: "expo-blur@npm:57.0.2"
+  peerDependencies:
+    expo: "*"
+    react: "*"
+    react-native: "*"
+  checksum: b92f3071b6c38dd5a387cd25b70be47675bb929447e88bcc2deb13f3831bc77e9dede0d9153328eb370a2a5b6737a2f64ab772f4f20d63db045bbf76bd77e1e7
+  languageName: node
+  linkType: hard
+
 "expo-constants@npm:~57.0.10":
   version: 57.0.10
   resolution: "expo-constants@npm:57.0.10"
@@ -12561,6 +12572,17 @@ __metadata:
     expo: "*"
     react: "*"
   checksum: 25879f6befbcc287c201eba5f756f857d419b28cc155452f2d75e90a3009fab94576f91cb90f4b493791d055b1261a087ebd2cfe0cf9cd313d848b75ebdf650a
+  languageName: node
+  linkType: hard
+
+"expo-linear-gradient@npm:~57.0.1":
+  version: 57.0.1
+  resolution: "expo-linear-gradient@npm:57.0.1"
+  peerDependencies:
+    expo: "*"
+    react: "*"
+    react-native: "*"
+  checksum: 504369f8ab2f394120b0191e114a0f1320888fa5a9a65dda8b5a4947ef6cd6f2fb79f3c20b668ed38febf945ea8839746bfe1e964bfafb056277ba6d1b449765
   languageName: node
   linkType: hard
 
@@ -16800,6 +16822,23 @@ __metadata:
   bin:
     loose-envify: cli.js
   checksum: 6517e24e0cad87ec9888f500c5b5947032cdfe6ef65e1c1936a0c48a524b81e65542c9c3edc91c97d5bddc806ee2a985dbc79be89215d613b1de5db6d1cfe6f4
+  languageName: node
+  linkType: hard
+
+"lottie-react-native@npm:~7.3.8":
+  version: 7.3.8
+  resolution: "lottie-react-native@npm:7.3.8"
+  peerDependencies:
+    "@lottiefiles/dotlottie-react": ^0.13.5
+    react: "*"
+    react-native: ">=0.46"
+    react-native-windows: ">=0.63.x"
+  peerDependenciesMeta:
+    "@lottiefiles/dotlottie-react":
+      optional: true
+    react-native-windows:
+      optional: true
+  checksum: 1fd4317fd0e82bd99418274e6058f520ea71b4d4cca3a6c65c093dfb51588c40132a951b74f964d020dcda79159eb0bfba4edc1336862998d3851fa9d15d8ee0
   languageName: node
   linkType: hard
 
@@ -21240,6 +21279,9 @@ __metadata:
     "@types/number-to-words": ^1.2.3
     babel-plugin-module-resolver: ^5.0.3
     expo: ~57.0.12
+    expo-blur: ~57.0.2
+    expo-linear-gradient: ~57.0.1
+    lottie-react-native: ~7.3.8
     number-to-words: ^1.2.4
     react: 19.2.3
     react-dom: 19.2.3

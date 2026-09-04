@@ -70,9 +70,10 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 13,
     fontWeight: '500',
-    color: '#000000',
+    color: '#868686',
   },
   selectedLabel: {
     fontWeight: '600',
+    color: '#4e4e4e',
   },
 });
