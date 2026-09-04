@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, type TextProps } from 'react-native';
+import { colors } from '../theme';
 
 type CustomTextProps = TextProps;
 
@@ -13,6 +14,6 @@ export const CustomText = ({ children, style, ...props }: CustomTextProps) => {
 
 const styles = StyleSheet.create({
   text: {
-    color: 'white',
+    color: colors.textPrimary,
   },
 });
